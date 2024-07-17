@@ -787,7 +787,7 @@ async function communicate2Backend(
 ) {
   try {
     // Fetch data from your backend
-    let backendUrl = `https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec?method${method.toString()}`;
+    let backendUrl = `https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec?method=${method.toString()}`;
     if (method !== "create") {
       if (!roomId) {
         return handleError("Missing roomId parameter");

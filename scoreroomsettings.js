@@ -74,7 +74,7 @@ function populateScoreRoomSelect(currentScoreRoom) {
   scoreRoomSelect.innerHTML = ""; // Clear existing options
   console.log(scoreRoomIds);
   const scoreRoomIdsArr = Object.keys(scoreRoomIds);
-  for (let i =0;i<scoreRoomIdsArr.length;i++) {
+  for (let i = 0; i < scoreRoomIdsArr.length; i++) {
     const id = scoreRoomIdsArr[i];
     const scoreRoomName = scoreRoomIds[id] || `Score Room ${i}`;
     const option = document.createElement("option");
@@ -89,6 +89,22 @@ function populateScoreRoomSelect(currentScoreRoom) {
 function updateShareLink(scoreRoomName) {
   const shareLinkElement = document.getElementById("shareScoreRoomLink");
   const currentUrl = new URL(window.location.href);//
+
+  if (scoreRoomName) {
+    let rawScoreRoomIds = localStorage.getItem("scoreRoomIds");
+
+    if (rawScoreRoomIds) {
+      scoreRoomIds = JSON.parse(rawScoreRoomIds);
+
+      scoreRoomName = scoreRoomIds[Object.keys(scoreRoomIds)[0]];
+      if (currentScoreRoom) {
+        currentScoreRoom = scoreRoomIds[Object.keys(scoreRoomIds)[0]];
+      } else {
+        console.log(`there is no current score room`)
+      }
+    }
+  }
+
   console.log(`${scoreRoomName} : ${scoreRoomIds[scoreRoomName]}`);
 
   if (scoreRoomIds[scoreRoomName]) {
@@ -100,7 +116,7 @@ function updateShareLink(scoreRoomName) {
   }
 }
 
-function createNewScoreRoom () {
+function createNewScoreRoom() {
   communicate2Backend("create").then((data) => {
     const roomId = data.roomId;
     if (roomId) {
@@ -117,5 +133,38 @@ function createNewScoreRoom () {
 // Event listener for the "Score Room Settings" button
 scoreRoomSettingsButton.addEventListener("click", openScoreRoomSettingsModal); // Call openScoreRoomSettingsModal to open the existing modal
 
-createScoreRoomButton.addEventListener("click", createNewScoreRoom); 
+// Event listener for the score room select dropdown
+scoreRoomSelect.addEventListener('change', () => {
+  const newScoreRoom = scoreRoomSelect.value;
+  if (newScoreRoom !== "") { // Only change if a valid score room is selected
+    currentScoreRoom = newScoreRoom;
+    loadCurrentScoreRoom();
+  }
+});
+
+createScoreRoomButton.addEventListener("click", createNewScoreRoom);
+
+function deleteNewScoreRoom() {
+  const confirmed = confirm(
+    `Are you sure you want to delete score room "${currentScoreRoom}"? This action cannot be undone.`
+  );
+  if (confirmed) {
+    delete scoreRoomIds[currentScoreRoom];
+    localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+
+    // Additional actions you need to take after deleting:
+
+    // - Update the score room select and load the default room
+    if (Object.keys(scoreRoomIds).length < 1) {
+      createNewScoreRoom();
+    }
+
+    scoreRoomSelect.selectedIndex = 1; // Set the index to 1
+
+    // You might also want to:
+    // - Send a request to your backend to delete the score room from the database
+  }
+}
+
+deleteScoreRoomButton.addEventListener("click", deleteNewScoreRoom);
 //

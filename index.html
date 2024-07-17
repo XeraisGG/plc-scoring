@@ -148,22 +148,22 @@
             <th>Setting</th>
             <th>Value</th>
           </tr>
-          <tr style="display: none">
-            <td>Score Room Nick Name:</td>
-            <td>
-              <input type="text" id="scoreRoomNameInput" value="default" />
-            </td>
-          </tr>
           <tr>
             <td>Score Room Date:</td>
             <td><input type="date" id="scoreRoomDateInput" /></td>
           </tr>
           <tr>
             <td>Scrim Name:</td>
-            <td><input type="text" id="scoreRoomScrimNameInput" /></td>
+            <td><input type="text" id="scoreRoomScrimNameInput" list="scrimNameExamples">
+              <datalist id="scrimNameExamples">
+                  <option value="5s"></option>
+                  <option value="7s"></option>
+                  <option value="1030s"></option>
+                  <option value="12s"></option>
+              </datalist></td>
           </tr>
           <tr>
-            <td>Score Room Lobby:</td>
+            <td>Score Room Lobby / Group:</td>
             <td><input type="text" id="scoreRoomLobbyInput" /></td>
           </tr>
           <tr>

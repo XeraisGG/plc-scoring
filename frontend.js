@@ -752,40 +752,47 @@ async function loadCurrentScoreRoom() {
   });
 }
 
-// Replace 'YOUR_APPS_SCRIPT_URL' with your actual deployed Apps Script URL
-const apiBaseUrl = "";
 // Function to get a score room
-async function communicate2Backend(
-  method,
-  roomId = null,
-  scoreRoomData = null
-) {
+async function communicate2Backend(method, roomId = null, scoreRoomData = null) {
   try {
-    // Fetch data from your backend
-    let backendUrl = `https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec?method=${method.toString()}`;
-    if (method !== "create") {
-      if (!roomId) {
-        return handleError("Missing roomId parameter");
-      }
-      backendUrl += `&roomId=${roomId.toString()}`;
-      if (method == "update") {
-        if (!scoreRoomData) {
-          return handleError("Missing scoreRoomData parameter");
-        }
-        backendUrl += `&scoreRoomData=${JSON.stringify(scoreRoomData)}`;
-      }
+    // Google Apps Script web app URL
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec ";
+
+    const requestBody = {
+      method: method.toUpperCase(), // Convert method to uppercase for consistency
+    };
+
+    // Add roomId and scoreRoomData only if they're needed for the request
+    if (roomId) {
+      requestBody.roomId = roomId.toString();
     }
-    const response = await fetch(backendUrl);
+    if (scoreRoomData) {
+      requestBody.scoreRoomData = scoreRoomData;
+    }
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to communicate with backend: ${response.status} ${response.statusText}`
+      );
+    }
 
     const data = await response.json();
     if (data.success) {
-      return data;
+      return data; // Return the full response data
     } else {
-      throw new Error(`Error fetching score room: ${data.error}`);
+      throw new Error(`Server error: ${data.error}`);
     }
   } catch (error) {
-    console.error("Error getting score room:", error);
-    return null;
+    console.error("Error communicating with backend:", error);
+    return null; 
   }
 }
 

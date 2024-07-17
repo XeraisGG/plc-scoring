@@ -722,9 +722,10 @@ if (shareId) {
 
 function addNewScoreRoom(shareId) {
   if (scoreRoomIds[shareId]) {return}
-  communicate2Backend("get", shareId).then((scoreRoomData) => {
-    if (scoreRoomData) {
-      scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
+  communicate2Backend("get", shareId).then((data) => {
+    const result = data.scoreRoomData;
+    if (result) {
+      scoreRoomIds[shareId] = result.scoreRoomSettings.nickname || null;
       localStorage.setItem("scoreRoomIds", scoreRoomIds);
     } else {
       // Handle the error if the score room wasn't found or there was another error
@@ -732,11 +733,11 @@ function addNewScoreRoom(shareId) {
   });
 }
 
-
-
 async function loadCurrentScoreRoom() {
-  communicate2Backend("get", currentScoreRoom).then((scoreRoomData) => {
-    if (scoreRoomData) {
+  communicate2Backend("get", currentScoreRoom).then((data) => {
+    const result = data.scoreRoomData;
+    if (result) {
+      scoreRoomData = data.scoreRoomData;
       populateTeamList();
       const totalSavedMatches = Object.keys(scoreRoomData.gameData).length;
       const tables = tablesContainer.querySelectorAll(".gameScores");
@@ -744,43 +745,13 @@ async function loadCurrentScoreRoom() {
       for (let i = tables.length; i < totalSavedMatches; i++) {
         addTable();
       }
+      saveCurrentScoreRoomData ();
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }
   });
 }
 
-/*
-async function getScoreRoom(roomId) {
-  try {
-    const response = await fetch("http://160.3.190.51:63969/plc/api/get", {
-      // Assuming your POST endpoint is /get
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ roomId }),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch score room: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-
-    if (data.success) {
-      return data.scoreRoomData;
-    } else {
-      throw new Error(`Server error: ${data.error}`);
-    }
-  } catch (error) {
-    console.error("Error getting score room:", error);
-    return null;
-  }
-}
-*/
 // Replace 'YOUR_APPS_SCRIPT_URL' with your actual deployed Apps Script URL
 const apiBaseUrl = "";
 // Function to get a score room
@@ -808,7 +779,7 @@ async function communicate2Backend(
 
     const data = await response.json();
     if (data.success) {
-      return data.scoreRoomData;
+      return data;
     } else {
       throw new Error(`Error fetching score room: ${data.error}`);
     }
@@ -816,6 +787,17 @@ async function communicate2Backend(
     console.error("Error getting score room:", error);
     return null;
   }
+}
+
+function saveCurrentScoreRoomData () {
+  getGameData();
+  updateTeamDataFromTable();
+  saveScoreRoomSettings();
+  communicate2Backend(
+    "save",
+    currentScoreRoom,
+    scoreRoomData
+  );
 }
 
 function handleError(message) {

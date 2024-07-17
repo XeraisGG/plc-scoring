@@ -44,6 +44,7 @@ function loadScoreRoomSettings(scoreRoomName) {
   scoreRoomLobbyInput.value = settings.lobby || "";
   scoreRoomServerInput.value = settings.server || "";
   scoreRoomNicknameInput.value = settings.nickname || "";
+  populateScoreRoomSelect();
   updateShareLink();
 }
 
@@ -57,6 +58,9 @@ function saveScoreRoomSettings() {
     server: scoreRoomServerInput.value,
     nickname: scoreRoomNicknameInput.value,
   };
+
+  scoreRoomIds[currentScoreRoom] = scoreRoomNicknameInput.value || null;
+  localStorage.setItem("scoreRoomIds", scoreRoomIds);
   //saveScoreRooms(); // Save all score rooms to local storage
 
   // Update the score room selector
@@ -67,11 +71,13 @@ function saveScoreRoomSettings() {
 function populateScoreRoomSelect() {
   scoreRoomSelect.innerHTML = ""; // Clear existing options
   console.log(scoreRoomIds);
-  Object.keys(scoreRoomIds).length;
-  for (id in scoreRoomIds) {
+  const scoreRoomIdsArr = Object.keys(scoreRoomIds);
+  for (let i =0;i<scoreRoomIdsArr.length;i++) {
+    const id = scoreRoomIdsArr[i];
+    const scoreRoomName = scoreRoomIds[id] || `Score Room ${i}`;
     const option = document.createElement("option");
     option.value = id;
-    option.text = scoreRoomIds[id] || `Score Room ${id}`;
+    option.text = scoreRoomName;
     scoreRoomSelect.add(option);
   }
   // Load settings for the currently selected score room after updating the dropdown
@@ -91,6 +97,22 @@ function updateShareLink() {
   }
 }
 
+function createNewScoreRoom () {
+  communicate2Backend("create").then((data) => {
+    const roomId = data.roomId;
+    if (roomId) {
+      currentScoreRoom = roomId;
+      addNewScoreRoom(roomId);
+      loadCurrentScoreRoom();
+      loadScoreRoomSettings(roomId);
+    } else {
+      // Handle the error if the score room wasn't found or there was another error
+    }
+  });
+}
+
 // Event listener for the "Score Room Settings" button
 scoreRoomSettingsButton.addEventListener("click", openScoreRoomSettingsModal); // Call openScoreRoomSettingsModal to open the existing modal
+
+createScoreRoomButton.addEventListener("click", createNewScoreRoom); 
 //

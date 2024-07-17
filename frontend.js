@@ -800,10 +800,7 @@ async function communicate2Backend(
         backendUrl += `scoreRoomData${JSON.stringify(scoreRoomData)}`;
       }
     }
-    const response = await fetch(backendUrl, {
-      method: "GET", // Changed to GET
-      mode: "no-cors",
-    });
+    const response = await fetch(backendUrl);
 
     const data = await response.json();
     if (data.success) {
@@ -815,4 +812,8 @@ async function communicate2Backend(
     console.error("Error getting score room:", error);
     return null;
   }
+}
+
+function handleError(message) {
+  return console.error(message);
 }

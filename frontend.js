@@ -25,28 +25,6 @@ const params = currentUrl.searchParams;
 
 // Check if the "roomId" parameter exists
 const shareId = params.get("shareId");
-if (shareId) {
-  console.log("shareId:", shareId); // Log the roomId if it exists
-  addNewScoreRoom(shareId);
-  params.delete("shareId"); // Remove the roomId parameter
-
-  // Update the URL without a full reload (using history.replaceState)
-  const newUrl = `${currentUrl.origin}${
-    currentUrl.pathname
-  }?${params.toString()}`;
-  window.history.replaceState({}, document.title, newUrl);
-}
-
-function addNewScoreRoom(shareId) {
-  communicate2Backend("get", currentScoreRoom).then((scoreRoomData) => {
-    if (scoreRoomData) {
-      scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
-      localStorage.setItem("scoreRoomIds", scoreRoomIds);
-    } else {
-      // Handle the error if the score room wasn't found or there was another error
-    }
-  });
-}
 
 let currentScoreRoom = Object.keys(scoreRoomIds)[0];
 
@@ -729,6 +707,31 @@ let scoreRoomData = {
     },
   },
 };
+
+if (shareId) {
+  console.log("shareId:", shareId); // Log the roomId if it exists
+  addNewScoreRoom(shareId);
+  params.delete("shareId"); // Remove the roomId parameter
+
+  // Update the URL without a full reload (using history.replaceState)
+  const newUrl = `${currentUrl.origin}${
+    currentUrl.pathname
+  }?${params.toString()}`;
+  window.history.replaceState({}, document.title, newUrl);
+}
+
+function addNewScoreRoom(shareId) {
+  communicate2Backend("get", currentScoreRoom).then((scoreRoomData) => {
+    if (scoreRoomData) {
+      scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
+      localStorage.setItem("scoreRoomIds", scoreRoomIds);
+    } else {
+      // Handle the error if the score room wasn't found or there was another error
+    }
+  });
+}
+
+
 
 async function loadCurrentScoreRoom() {
   communicate2Backend("get", currentScoreRoom).then((scoreRoomData) => {

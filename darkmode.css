@@ -1,0 +1,97 @@
+      /* Dark Mode Styles */
+      body.dark-mode {
+        background-color: #222; /* Dark background for body */
+        color: #e8e6e3; /* Light text color */
+      }
+
+      /* General element styles in dark mode */
+      body.dark-mode h1,
+      body.dark-mode h2,
+      body.dark-mode h3,
+      body.dark-mode p,
+      body.dark-mode label,
+      body.dark-mode button {
+        color: #e8e6e3; /* Light text for headings and other elements */
+      }
+
+      /* Table Styles */
+      body.dark-mode #gameScores,
+      body.dark-mode .gameScores,
+      body.dark-mode #teamListTable {
+        background-color: #333;
+        color: #e8e6e3;
+        border-color: #555;
+      }
+
+      body.dark-mode #gameScores th,
+      body.dark-mode .gameScores th,
+      body.dark-mode #teamListTable th {
+        background-color: #343a40; /* Darker header background */
+      }
+
+      body.dark-mode #gameScores tr:nth-child(even),
+      body.dark-mode .gameScores tr:nth-child(even),
+      body.dark-mode #teamListTable tr:nth-child(even) {
+        background-color: #282828;
+      }
+
+      /* Input, Select, and Textarea Styles */
+      body.dark-mode input,
+      body.dark-mode select,
+      body.dark-mode textarea {
+        background-color: #333;
+        color: #e8e6e3;
+        border-color: #555;
+      }
+
+      body.dark-mode #teamListTable input[type="text"],
+      body.dark-mode #teamListTable textarea {
+        background-color: #444; /* Slightly lighter background for inputs/textareas */
+        color: #e8e6e3; /* Keep light text color for better contrast */
+        border-color: #666; /* Slightly darker border */
+      }
+
+      /* Map Select Styling (Dark Mode) */
+      body.dark-mode #gameScores select#maps,
+      body.dark-mode .gameScores select#maps {
+        background-color: #333; /* Dark background */
+        color: #e8e6e3; /* Light text */
+        border-color: #555; /* Slightly lighter border */
+      }
+
+      /* Custom Arrow for Select (Dark Mode) */
+      body.dark-mode #gameScores select#maps::after,
+      body.dark-mode .gameScores select#maps::after {
+        content: "▼"; /* Downward arrow */
+        color: #e8e6e3; /* Light arrow color */
+      }
+
+      /* Hover Effect (Dark Mode) */
+      body.dark-mode #gameScores select#maps:hover,
+      body.dark-mode .gameScores select#maps:hover {
+        background-color: #444; /* Slightly lighter background on hover */
+        border-color: #666; /* Slightly darker border on hover */
+      }
+
+      /* Dark Mode Styles for Team List Modal */
+      body.dark-mode .modal-content {
+        background-color: #333; /* Dark background for modal content */
+        color: #e8e6e3; /* Light text color for modal content */
+        border-color: #555; /* Darker border for modal content */
+      }
+
+      body.dark-mode .modal-content h2 {
+        color: #e8e6e3; /* Light text for modal header */
+      }
+
+      body.dark-mode .close-button {
+        color: #e8e6e3; /* Light close button in dark mode */
+      }
+
+      .invalidSelection {
+        background-color: rgb(252, 39, 39); /* Or any other color you prefer */
+      }
+
+      body.dark-mode .invalidSelection {
+        background-color: rgb(190, 29, 29); /* Or any other color you prefer */
+      }

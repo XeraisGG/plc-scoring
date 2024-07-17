@@ -1,0 +1,73 @@
+#scoreRoomSettingsModal .modal-content table {
+    width: 100%; /* Make the table full width */
+  }
+
+  /* Score Room Settings Modal */
+  #scoreRoomSettingsModal .modal-content {
+    background-color: #333; /* Dark background */
+    color: white; /* Light text color */
+    width: 400px; /* Adjust width as needed */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+  }
+
+  #scoreRoomSettingsModal h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  #scoreRoomSettingsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  #scoreRoomSettingsTable th,
+  #scoreRoomSettingsTable td {
+    padding: 10px;
+    border-bottom: 1px solid #555; /* Subtle horizontal lines between rows */
+  }
+
+  #scoreRoomSettingsTable th {
+    text-align: left;
+  }
+
+  #scoreRoomSettingsTable input[type="text"],
+  #scoreRoomSettingsTable input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #444; /* Darker input background */
+    color: white;
+  }
+
+  #scoreRoomSelect {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #007bff; /* Blue border for select */
+    border-radius: 4px;
+    background-color: #444;
+    color: white;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  #createScoreRoomButton {
+    width: 100%;
+  }
+
+  /* Share Score Room Link Styling */
+  #shareScoreRoomLink {
+    /*width: 100%;*/
+    height: 80%;
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #444;
+    color: white;
+    resize: none;
+  }

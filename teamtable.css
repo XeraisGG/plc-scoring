@@ -1,0 +1,70 @@
+#teamListTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+  }
+
+  #teamListTable th,
+  #teamListTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  #teamListTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  #teamListTable input[type="text"],
+  #teamListTable textarea {
+    width: 100%; /* Make inputs and textareas take up full width */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  /* Your existing CSS */
+  #teamListTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 20px;
+  }
+
+  #teamListTable th,
+  #teamListTable td {
+    border: 1px solid #ddd;
+    padding: 12px 15px; /* Increased padding for better spacing */
+    text-align: left;
+    vertical-align: middle; /* Vertically center content */
+  }
+
+  /* Table Header Styling */
+  #teamListTable th {
+    background-color: #007bff; /* Blue background for header */
+    color: white;
+    font-weight: bold;
+  }
+
+  /* Alternating Row Colors */
+  #teamListTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  /* Input Field and Textarea Styling */
+  #teamListTable input[type="text"],
+  #teamListTable textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Allow vertical resizing of textarea */
+  }
+
+  /* Textarea Styling */
+  #teamListTable textarea {
+    min-height: 60px; /* Set minimum height for textarea */
+  }

@@ -44,7 +44,6 @@ function loadScoreRoomSettings(scoreRoomName) {
   scoreRoomLobbyInput.value = settings.lobby || "";
   scoreRoomServerInput.value = settings.server || "";
   scoreRoomNicknameInput.value = settings.nickname || "";
-  populateScoreRoomSelect(currentScoreRoom);
   updateShareLink();
 }
 

@@ -721,7 +721,7 @@ if (shareId) {
 }
 
 function addNewScoreRoom(shareId) {
-  communicate2Backend("get", currentScoreRoom).then((scoreRoomData) => {
+  communicate2Backend("get", shareId).then((scoreRoomData) => {
     if (scoreRoomData) {
       scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
       localStorage.setItem("scoreRoomIds", scoreRoomIds);

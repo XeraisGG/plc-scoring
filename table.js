@@ -60,7 +60,7 @@ function addNewScoreRoom(shareId) {
   communicate2Backend("get", shareId).then((scoreRoomData) => {
     if (scoreRoomData) {
       scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
-      localStorage.setItem("scoreRoomIds", scoreRoomIds);
+      localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }

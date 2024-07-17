@@ -726,7 +726,7 @@ function addNewScoreRoom(shareId) {
     const result = data.scoreRoomData;
     if (result) {
       scoreRoomIds[shareId] = result.scoreRoomSettings.nickname || null;
-      localStorage.setItem("scoreRoomIds", scoreRoomIds);
+      localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }

@@ -44,7 +44,7 @@ function loadScoreRoomSettings(scoreRoomName) {
   scoreRoomLobbyInput.value = settings.lobby || "";
   scoreRoomServerInput.value = settings.server || "";
   scoreRoomNicknameInput.value = settings.nickname || "";
-  populateScoreRoomSelect();
+  populateScoreRoomSelect(currentScoreRoom);
   updateShareLink();
 }
 
@@ -60,7 +60,7 @@ function saveScoreRoomSettings() {
   };
 
   scoreRoomIds[currentScoreRoom] = scoreRoomNicknameInput.value || null;
-  localStorage.setItem("scoreRoomIds", scoreRoomIds);
+  localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
   //saveScoreRooms(); // Save all score rooms to local storage
 
   // Update the score room selector
@@ -68,7 +68,7 @@ function saveScoreRoomSettings() {
 }
 
 // Function to populate the score room selector
-function populateScoreRoomSelect() {
+function populateScoreRoomSelect(currentScoreRoom) {
   scoreRoomSelect.innerHTML = ""; // Clear existing options
   console.log(scoreRoomIds);
   const scoreRoomIdsArr = Object.keys(scoreRoomIds);

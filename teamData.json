@@ -1,0 +1,168 @@
+{
+    "scoreRoomSettings": {},
+    "teamData": {
+        "3": {
+            "slot": 3,
+            "name": "RAIN ESPORTS",
+            "tag": "NO TAGS ",
+            "notes": ""
+        },
+        "4": {
+            "slot": 4,
+            "name": "RIGGED A",
+            "tag": "RIG ",
+            "notes": ""
+        },
+        "5": {
+            "slot": 5,
+            "name": "REALITY",
+            "tag": "REAL ",
+            "notes": ""
+        },
+        "6": {
+            "slot": 6,
+            "name": "JCR SOLARA",
+            "tag": "JCR ",
+            "notes": ""
+        },
+        "7": {
+            "slot": 7,
+            "name": "TRINITY ESPORTS",
+            "tag": "TY ",
+            "notes": ""
+        },
+        "8": {
+            "slot": 8,
+            "name": "TEAM INTIMIDATORS",
+            "tag": "INT ",
+            "notes": ""
+        },
+        "9": {
+            "slot": 9,
+            "name": "XTREME ICE NA",
+            "tag": "XI ",
+            "notes": ""
+        },
+        "10": {
+            "slot": 10,
+            "name": "GLACIER ESPORTS",
+            "tag": "M04 ",
+            "notes": ""
+        },
+        "11": {
+            "slot": 11,
+            "name": "AESOR SEX SLAVES",
+            "tag": "TRD ",
+            "notes": ""
+        },
+        "12": {
+            "slot": 12,
+            "name": "DIGITAL AGE",
+            "tag": "AGE ",
+            "notes": ""
+        },
+        "13": {
+            "slot": 13,
+            "name": "NPL TORONTO",
+            "tag": "NPL ",
+            "notes": ""
+        },
+        "14": {
+            "slot": 14,
+            "name": "TEAM HYPEPHASE",
+            "tag": "THP ",
+            "notes": ""
+        },
+        "15": {
+            "slot": 15,
+            "name": "AKATSUKI",
+            "tag": "AT ",
+            "notes": ""
+        },
+        "16": {
+            "slot": 16,
+            "name": "FOOUR KINGS REGEN ESPORTS",
+            "tag": "FOKRE ",
+            "notes": ""
+        },
+        "17": {
+            "slot": 17,
+            "name": "INFINITY REAPERS",
+            "tag": "I69X ",
+            "notes": ""
+        },
+        "18": {
+            "slot": 18,
+            "name": "REVENGE",
+            "tag": "REVE ",
+            "notes": ""
+        },
+        "19": {
+            "slot": 19,
+            "name": "SS ESPORTS",
+            "tag": "SS ",
+            "notes": ""
+        },
+        "20": {
+            "slot": 20,
+            "name": "MANIC",
+            "tag": "MN",
+            "notes": ""
+        },
+        "21": {
+            "slot": 21,
+            "name": "ROADTODEATH",
+            "tag": "R2DX ",
+            "notes": ""
+        },
+        "22": {
+            "slot": 22,
+            "name": "ATOMX ESPORTS",
+            "tag": "ATMX ",
+            "notes": ""
+        },
+        "23": {
+            "slot": 23,
+            "name": "SKY",
+            "tag": "sky ",
+            "notes": ""
+        },
+        "24": {
+            "slot": 24,
+            "name": "",
+            "tag": "",
+            "notes": ""
+        },
+        "25": {
+            "slot": 25,
+            "name": "",
+            "tag": "",
+            "notes": ""
+        }
+    },
+    "gameData": {
+        "1": {
+            "placements": {
+                "1": {
+                    "teamName": "RAIN ESPORTS",
+                    "teamTag": "NO TAGS",
+                    "teamEliminations": 0,
+                    "noScore": false
+                }
+            },
+            "map": "Erangel",
+            "noScoreTeams": []
+        },
+        "2": {
+            "placements": {},
+            "map": "Miramar",
+            "noScoreTeams": []
+        },
+        "3": {
+            "placements": {},
+            "map": "Sanhok",
+            "noScoreTeams": []
+        }
+    },
+    "scoreRoom": 1
+}

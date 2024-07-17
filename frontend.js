@@ -772,7 +772,7 @@ async function communicate2Backend(
         if (!scoreRoomData) {
           return handleError("Missing scoreRoomData parameter");
         }
-        backendUrl += `scoreRoomData${JSON.stringify(scoreRoomData)}`;
+        backendUrl += `&scoreRoomData=${JSON.stringify(scoreRoomData)}`;
       }
     }
     const response = await fetch(backendUrl);

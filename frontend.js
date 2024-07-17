@@ -714,14 +714,13 @@ if (shareId) {
   params.delete("shareId"); // Remove the roomId parameter
 
   // Update the URL without a full reload (using history.replaceState)
-  const newUrl = `${currentUrl.origin}${
-    currentUrl.pathname
-  }?${params.toString()}`;
+  const newUrl = `${currentUrl.origin}${currentUrl.pathname
+    }?${params.toString()}`;
   window.history.replaceState({}, document.title, newUrl);
 }
 
 function addNewScoreRoom(shareId) {
-  if (scoreRoomIds[shareId]) {return}
+  if (scoreRoomIds[shareId]) { return }
   communicate2Backend("get", shareId).then((data) => {
     const result = data.scoreRoomData;
     if (result) {
@@ -745,7 +744,7 @@ async function loadCurrentScoreRoom() {
       for (let i = tables.length; i < totalSavedMatches; i++) {
         addTable();
       }
-      saveCurrentScoreRoomData ();
+      saveCurrentScoreRoomData();
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }
@@ -753,10 +752,10 @@ async function loadCurrentScoreRoom() {
 }
 
 // Function to get a score room
-async function communicate2Backend(method, roomId = null, scoreRoomData = null) {
+async function communicate2Backend(method = "get", roomId = "1234567890", scoreRoomData = null) {
   try {
     // Google Apps Script web app URL
-    const apiUrl = "https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec ";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec";
 
     const requestBody = {
       method: method.toUpperCase(), // Convert method to uppercase for consistency
@@ -773,30 +772,39 @@ async function communicate2Backend(method, roomId = null, scoreRoomData = null) 
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "text/plain;charset=utf-8",
       },
       body: JSON.stringify(requestBody),
     });
 
+
+
     if (!response.ok) {
-      throw new Error(
-        `Failed to communicate with backend: ${response.status} ${response.statusText}`
-      );
+      const errorText = await response.text(); // Get the full response text
+      throw new Error(`Failed to fetch score room: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
-    const data = await response.json();
-    if (data.success) {
-      return data; // Return the full response data
-    } else {
-      throw new Error(`Server error: ${data.error}`);
+    //console.log("Response:", await response.json());
+
+    try {
+      const data = await response.json();
+      if (data.success) {
+        return data;
+      } else {
+        throw new Error(`Server error: ${data.error}`);
+      }
+    } catch (parseError) {
+      // Handle the case where the response is not JSON
+      console.error("Error parsing response as JSON:", parseError);
+      throw new Error(`Invalid response from server: ${await response.text()}`); // Get the raw text for debugging
     }
   } catch (error) {
     console.error("Error communicating with backend:", error);
-    return null; 
+    return null;
   }
 }
 
-function saveCurrentScoreRoomData () {
+function saveCurrentScoreRoomData() {
   getGameData();
   updateTeamDataFromTable();
   saveScoreRoomSettings();

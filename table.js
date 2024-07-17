@@ -17,6 +17,7 @@ darkModeToggle.addEventListener("click", () => {
   darkModeToggle.textContent = newDarkModeState ? "Light Mode" : "Dark Mode";
 });
 
+
 const placementPoints = {
   1: 10,
   2: 6,
@@ -44,28 +45,6 @@ const params = currentUrl.searchParams;
 
 // Check if the "roomId" parameter exists
 const shareId = params.get("shareId");
-if (shareId) {
-  console.log("shareId:", shareId); // Log the roomId if it exists
-  addNewScoreRoom(shareId);
-  params.delete("shareId"); // Remove the roomId parameter
-
-  // Update the URL without a full reload (using history.replaceState)
-  const newUrl = `${currentUrl.origin}${
-    currentUrl.pathname
-  }?${params.toString()}`;
-  window.history.replaceState({}, document.title, newUrl);
-}
-
-function addNewScoreRoom(shareId) {
-  communicate2Backend("get", shareId).then((scoreRoomData) => {
-    if (scoreRoomData) {
-      scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
-      localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
-    } else {
-      // Handle the error if the score room wasn't found or there was another error
-    }
-  });
-}
 
 let currentScoreRoom = Object.keys(scoreRoomIds)[0];
 
@@ -749,9 +728,35 @@ let scoreRoomData = {
   },
 };
 
+if (shareId) {
+  console.log("shareId:", shareId); // Log the roomId if it exists
+  addNewScoreRoom(shareId);
+  params.delete("shareId"); // Remove the roomId parameter
+
+  // Update the URL without a full reload (using history.replaceState)
+  const newUrl = `${currentUrl.origin}${currentUrl.pathname
+    }?${params.toString()}`;
+  window.history.replaceState({}, document.title, newUrl);
+}
+
+function addNewScoreRoom(shareId) {
+  if (scoreRoomIds[shareId]) { return }
+  communicate2Backend("get", shareId).then((data) => {
+    const result = data.scoreRoomData;
+    if (result) {
+      scoreRoomIds[shareId] = result.scoreRoomSettings.nickname || null;
+      localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+    } else {
+      // Handle the error if the score room wasn't found or there was another error
+    }
+  });
+}
+
 async function loadCurrentScoreRoom() {
-  communicate2Backend("get", currentScoreRoom).then((scoreRoomData) => {
-    if (scoreRoomData) {
+  communicate2Backend("get", currentScoreRoom).then((data) => {
+    const result = data.scoreRoomData;
+    if (result) {
+      scoreRoomData = data.scoreRoomData;
       populateTeamList();
       const totalSavedMatches = Object.keys(scoreRoomData.gameData).length;
       const tables = tablesContainer.querySelectorAll(".gameScores");
@@ -759,47 +764,79 @@ async function loadCurrentScoreRoom() {
       for (let i = tables.length; i < totalSavedMatches; i++) {
         addTable();
       }
+      saveCurrentScoreRoomData();
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }
   });
 }
 
-// Replace 'YOUR_APPS_SCRIPT_URL' with your actual deployed Apps Script URL
-const apiBaseUrl = "";
 // Function to get a score room
-async function communicate2Backend(
-  method,
-  roomId = null,
-  scoreRoomData = null
-) {
+async function communicate2Backend(method = "get", roomId = "1234567890", scoreRoomData = null) {
   try {
-    // Fetch data from your backend
-    let backendUrl = `https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec?method${method.toString()}`;
-    if (method !== "create") {
-      if (!roomId) {
-        return handleError("Missing roomId parameter");
-      }
-      backendUrl += `&roomId=${roomId.toString()}`;
-      if (method == "update") {
-        if (!scoreRoomData) {
-          return handleError("Missing scoreRoomData parameter");
-        }
-        backendUrl += `scoreRoomData${JSON.stringify(scoreRoomData)}`;
-      }
-    }
-    const response = await fetch(backendUrl);
+    // Google Apps Script web app URL
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec";
 
-    const data = await response.json();
-    if (data.success) {
-      return data.scoreRoomData;
-    } else {
-      throw new Error(`Error fetching score room: ${data.error}`);
+    const requestBody = {
+      method: method.toUpperCase(), // Convert method to uppercase for consistency
+    };
+
+    // Add roomId and scoreRoomData only if they're needed for the request
+    if (roomId) {
+      requestBody.roomId = roomId.toString();
+    }
+    if (scoreRoomData) {
+      requestBody.scoreRoomData = scoreRoomData;
+    }
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+
+
+    if (!response.ok) {
+      const errorText = await response.text(); // Get the full response text
+      throw new Error(`Failed to fetch score room: ${response.status} ${response.statusText} - ${errorText}`);
+    }
+
+    //console.log("Response:", await response.json());
+
+    try {
+      const data = await response.json();
+      if (data.success) {
+        return data;
+      } else {
+        throw new Error(`Server error: ${data.error}`);
+      }
+    } catch (parseError) {
+      // Handle the case where the response is not JSON
+      console.error("Error parsing response as JSON:", parseError);
+      throw new Error(`Invalid response from server: ${await response.text()}`); // Get the raw text for debugging
     }
   } catch (error) {
-    console.error("Error getting score room:", error);
+    console.error("Error communicating with backend:", error);
     return null;
   }
+}
+
+function saveCurrentScoreRoomData() {
+  getGameData();
+  updateTeamDataFromTable();
+  saveScoreRoomSettings();
+  communicate2Backend(
+    "update",
+    currentScoreRoom,
+    scoreRoomData
+  );
+}
+
+function handleError(message) {
+  return console.error(message);
 }
 
 const teamListModal = document.getElementById("teamListModal");
@@ -1237,7 +1274,8 @@ function createTable() {
 }
 
 function getGameData() {
-  const gameData = {};
+  const gameData = {
+  };
   const tables = tablesContainer.querySelectorAll(".gameScores");
 
   tables.forEach((table, gameIndex) => {
@@ -1509,6 +1547,7 @@ const scoreRoomNameInput = document.getElementById("scoreRoomNameInput");
 const scoreRoomDateInput = document.getElementById("scoreRoomDateInput");
 const scoreRoomLobbyInput = document.getElementById("scoreRoomLobbyInput");
 const scoreRoomServerInput = document.getElementById("scoreRoomServerInput");
+const scorescrimNameInput = document.getElementById("scoreRoomScrimNameInput");
 const scoreRoomNicknameInput = document.getElementById(
   "scoreRoomNicknameInput"
 );
@@ -1539,24 +1578,27 @@ function openScoreRoomSettingsModal() {
 // Function to load settings for a specific score room
 function loadScoreRoomSettings(scoreRoomName) {
   const settings = scoreRoomData.scoreRoomSettings || {};
-  scoreRoomNameInput.value = scoreRoomName;
   scoreRoomDateInput.value = settings.date || "";
   scoreRoomLobbyInput.value = settings.lobby || "";
   scoreRoomServerInput.value = settings.server || "";
   scoreRoomNicknameInput.value = settings.nickname || "";
-  updateShareLink();
+  scorescrimNameInput.value = settings.scrimName || "";
+  updateShareLink(scoreRoomName);
 }
 
 // Function to save settings for a specific score room
 function saveScoreRoomSettings() {
-  const scoreRoomName = scoreRoomNameInput.value.trim();
   //scoreRooms[scoreRoomName] = scoreRooms[scoreRoomName] || {}; // Create if not exists
   scoreRoomData.scoreRoomSettings = {
     date: scoreRoomDateInput.value,
     lobby: scoreRoomLobbyInput.value,
     server: scoreRoomServerInput.value,
     nickname: scoreRoomNicknameInput.value,
+    scrimName: scorescrimNameInput.value,
   };
+
+  scoreRoomIds[currentScoreRoom] = scoreRoomNicknameInput.value || null;
+  localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
   //saveScoreRooms(); // Save all score rooms to local storage
 
   // Update the score room selector
@@ -1564,35 +1606,103 @@ function saveScoreRoomSettings() {
 }
 
 // Function to populate the score room selector
-function populateScoreRoomSelect() {
+function populateScoreRoomSelect(currentScoreRoom) {
   scoreRoomSelect.innerHTML = ""; // Clear existing options
   console.log(scoreRoomIds);
-  Object.keys(scoreRoomIds).length;
-  for (id in scoreRoomIds) {
+  const scoreRoomIdsArr = Object.keys(scoreRoomIds);
+  for (let i = 0; i < scoreRoomIdsArr.length; i++) {
+    const id = scoreRoomIdsArr[i];
+    const scoreRoomName = scoreRoomIds[id] || `Score Room ${i}`;
     const option = document.createElement("option");
     option.value = id;
-    option.text = scoreRoomIds[id] || `Score Room ${id}`;
+    option.text = scoreRoomName;
     scoreRoomSelect.add(option);
   }
   // Load settings for the currently selected score room after updating the dropdown
   loadScoreRoomSettings(currentScoreRoom);
 }
 
-function updateShareLink() {
+function updateShareLink(scoreRoomName) {
   const shareLinkElement = document.getElementById("shareScoreRoomLink");
-  const currentUrl = new URL(window.location.href);
+  const currentUrl = new URL(window.location.href);//
 
-  if (scoreRoomIds[currentScoreRoom]) {
+  if (scoreRoomName) {
+    let rawScoreRoomIds = localStorage.getItem("scoreRoomIds");
+
+    if (rawScoreRoomIds) {
+      scoreRoomIds = JSON.parse(rawScoreRoomIds);
+
+      scoreRoomName = scoreRoomIds[Object.keys(scoreRoomIds)[0]];
+      if (currentScoreRoom) {
+        currentScoreRoom = scoreRoomIds[Object.keys(scoreRoomIds)[0]];
+      } else {
+        console.log(`there is no current score room`)
+      }
+    }
+  }
+
+  console.log(`${scoreRoomName} : ${scoreRoomIds[scoreRoomName]}`);
+
+  if (scoreRoomIds[scoreRoomName]) {
     // Check if score room ID exists
-    currentUrl.searchParams.set("shareId", currentScoreRoom);
+    currentUrl.searchParams.set("shareId", scoreRoomName);
     shareLinkElement.textContent = currentUrl.toString();
   } else {
     shareLinkElement.textContent = "Score Room ID not yet generated."; // Display a message if no ID
   }
 }
 
+function createNewScoreRoom() {
+  communicate2Backend("create").then((data) => {
+    const roomId = data.roomId;
+    if (roomId) {
+      currentScoreRoom = roomId;
+      addNewScoreRoom(roomId);
+      loadCurrentScoreRoom();
+      loadScoreRoomSettings(roomId);
+    } else {
+      // Handle the error if the score room wasn't found or there was another error
+    }
+  });
+}
+
 // Event listener for the "Score Room Settings" button
 scoreRoomSettingsButton.addEventListener("click", openScoreRoomSettingsModal); // Call openScoreRoomSettingsModal to open the existing modal
+
+// Event listener for the score room select dropdown
+scoreRoomSelect.addEventListener('change', () => {
+  const newScoreRoom = scoreRoomSelect.value;
+  if (newScoreRoom !== "") { // Only change if a valid score room is selected
+    currentScoreRoom = newScoreRoom;
+    loadCurrentScoreRoom();
+  }
+});
+
+createScoreRoomButton.addEventListener("click", createNewScoreRoom);
+
+function deleteNewScoreRoom() {
+  const confirmed = confirm(
+    `Are you sure you want to delete score room "${currentScoreRoom}"? This action cannot be undone.`
+  );
+  if (confirmed) {
+    delete scoreRoomIds[currentScoreRoom];
+    localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+
+    // Additional actions you need to take after deleting:
+
+    // - Update the score room select and load the default room
+    if (Object.keys(scoreRoomIds).length < 1) {
+      createNewScoreRoom();
+    }
+
+    scoreRoomSelect.selectedIndex = 1; // Set the index to 1
+
+    // You might also want to:
+    // - Send a request to your backend to delete the score room from the database
+  }
+}
+
+deleteScoreRoomButton.addEventListener("click", deleteNewScoreRoom);
 //
 
 function getRandomColor() {
@@ -1630,3 +1740,10 @@ function handleElementSelect(event) {
 
 // Add event listener to the tablesContainer
 tablesContainer.addEventListener("click", handleElementSelect);
+
+if (currentScoreRoom) {
+  loadCurrentScoreRoom();
+  openScoreRoomSettingsModal();
+} else {
+  openScoreRoomSettingsModal();
+}

@@ -817,7 +817,3 @@ async function communicate2Backend(
 function handleError(message) {
   return console.error(message);
 }
-
-function handleError(message) {
-  return console.error(message);
-}

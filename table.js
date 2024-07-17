@@ -57,7 +57,7 @@ if (shareId) {
 }
 
 function addNewScoreRoom(shareId) {
-  getScoreRoom(shareId).then((scoreRoomData) => {
+  communicate2Backend("get", shareId).then((scoreRoomData) => {
     if (scoreRoomData) {
       scoreRoomIds[shareId] = scoreRoomData.scoreRoomSettings.nickname || null;
       localStorage.setItem("scoreRoomIds", scoreRoomIds);
@@ -803,6 +803,13 @@ async function communicate2Backend(
     console.error("Error getting score room:", error);
     return null;
   }
+}
+
+if (currentScoreRoom) {
+  loadCurrentScoreRoom();
+  openScoreRoomSettingsModal();
+} else {
+  openScoreRoomSettingsModal();
 }
 
 const teamListModal = document.getElementById("teamListModal");

@@ -234,7 +234,8 @@ function createTable() {
 }
 
 function getGameData() {
-  const gameData = {};
+  const gameData = {
+  };
   const tables = tablesContainer.querySelectorAll(".gameScores");
 
   tables.forEach((table, gameIndex) => {

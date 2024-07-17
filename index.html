@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game Scores</title>
+    <style>
+      body {
+        overflow-x: hidden; /* Horizontal scrolling */
+        overflow-y: hidden; /* Vertical scrolling */
+      }
+      #mainContainer {
+        display: flex; /* Use flexbox for layout */
+      }
+      #tablesContainer {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        flex-grow: 1;
+
+        /* Remove vertical scrolling from the tablesContainer */
+        overflow: auto;
+        max-height: 99vh;
+      }
+
+      .tableContainer {
+        position: relative; /* This is crucial for sticky positioning within the container */
+        margin: 20px;
+        flex: 0 0 auto;
+
+        /* Add overflow to tableContainer for scrolling */
+        /*overflow: auto; /* Enable both horizontal and vertical scrolling */
+        /* max-height: 95vh; /* Set max-height to prevent content from pushing layout */
+      }
+
+      .tableContainer h2 {
+        position: sticky;
+        text-align: center;
+        margin-bottom: 10px; /* Add some space between the title and the table */
+      }
+
+      /* Sticky Header for Initial Table (with <thead>) */
+      .gameScores tr:first-child th,
+      #gameScores thead th h2 {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #4caf50;
+      }
+
+      #buttonContainer {
+        display: flex;
+        flex-direction: column; /* Stack buttons vertically */
+        width: 10vw; /* Set width to 10% of viewport width */
+        gap: 10px; /* Add some spacing between buttons */
+        align-self: flex-start;
+        align-items: center; /* Center buttons horizontally */
+        /* Keep buttons fixed width */
+        min-width: 10vw; /* Or a fixed pixel value like 150px */
+        padding-top: 15px; /* Add padding to the right side of the container */
+        padding-left: 10px; /* Add padding to the right side of the container */
+      }
+
+      .addTableButton {
+        width: 100%; /* Make buttons full width of the container */
+        box-sizing: border-box; /* Include padding and border in width calculation */
+        padding: 10px 20px; /* Inner padding around the button text */
+        margin: 0;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+      }
+
+      .addTableButton:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+      }
+
+      #sliderContainer {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px; /* Add some space above the slider */
+      }
+      #gameScores,
+      .gameScores {
+        font-family: sans-serif;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        border-radius: 5px; /* Rounded corners */
+      }
+
+      #gameScores th,
+      .gameScores th,
+      #gameScores td,
+      .gameScores td {
+        padding: 12px 15px;
+        vertical-align: middle; /* Better vertical alignment of content */
+        text-align: center;
+      }
+
+      /* Header Styling */
+      #gameScores th,
+      .gameScores th {
+        background-color: #4caf50; /* Green header */
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+        border-left: none;
+        border-right: none;
+      }
+
+      /* Row Styling */
+      #gameScores tr:nth-child(even),
+      .gameScores tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      /* Input and Select Styling */
+      #gameScores input,
+      .gameScores input,
+      #gameScores select,
+      .gameScores select {
+        border: 1px solid #ccc;
+        padding: 6px;
+        border-radius: 3px;
+      }
+
+      /* No Score Checkbox */
+      #gameScores input[type="checkbox"],
+      .gameScores input[type="checkbox"] {
+        width: 18px; /* Adjust checkbox size as needed */
+        height: 18px;
+      }
+
+      /* Kills Input Styling */
+      #gameScores input[type="number"],
+      .gameScores input[type="number"] {
+        width: 50px; /* Adjust width as needed */
+        padding: 8px; /* Increase padding for better visibility */
+        border: 2px solid #4caf50; /* Thicker green border */
+        border-radius: 5px; /* Rounded corners */
+        text-align: center;
+        font-size: 16px;
+        -moz-appearance: textfield; /* Remove arrows in Firefox */
+        -webkit-appearance: textfield; /* Remove arrows in Chrome, Safari, Edge */
+        appearance: textfield; /* Remove arrows in other browsers */
+      }
+
+      /* Optional: Focus Styling */
+      #gameScores input[type="number"]:focus,
+      .gameScores input[type="number"]:focus {
+        outline: none; /* Remove default focus outline */
+        border-color: #3e8e41; /* Darker green border on focus */
+        box-shadow: 0 0 5px rgba(62, 142, 65, 0.5); /* Subtle shadow on focus */
+      }
+
+      /* Map Select Styling */
+      #gameScores select#maps,
+      .gameScores select#maps {
+        text-align: center;
+        width: 100%; /* Make the select element take the full width */
+        padding: 10px;
+        margin-top: 10px; /* Add some space above the select menu */
+        border: 2px solid #4caf50; /* Slightly thicker green border */
+        border-radius: 8px; /* Larger border radius for softer corners */
+        background-color: #fff;
+        color: #333;
+        font-size: 16px;
+        -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+        -moz-appearance: none; /* Remove default styling in Firefox */
+        appearance: none; /* Remove default styling in other browsers */
+      }
+
+      /* Custom Arrow for Select (Optional) */
+      #gameScores select#maps::after,
+      .gameScores select#maps::after {
+        content: "▼"; /* Downward arrow */
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none; /* Prevent arrow from being clickable */
+      }
+
+      /* Hover Effect */
+      #gameScores select#maps:hover,
+      .gameScores select#maps:hover {
+        background-color: #f5f5f5; /* Subtle background on hover */
+        border-color: #45a049; /* Darker green border on hover */
+      }
+
+      #teamListTable {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+      }
+
+      #teamListTable th,
+      #teamListTable td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      #teamListTable th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+
+      #teamListTable input[type="text"],
+      #teamListTable textarea {
+        width: 100%; /* Make inputs and textareas take up full width */
+        box-sizing: border-box; /* Include padding and border in width calculation */
+        padding: 8px;
+        border: 1px solid #ccc;
+      }
+      /* Your existing CSS */
+      #teamListTable {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        border-radius: 5px; /* Rounded corners */
+        margin-bottom: 20px;
+      }
+
+      #teamListTable th,
+      #teamListTable td {
+        border: 1px solid #ddd;
+        padding: 12px 15px; /* Increased padding for better spacing */
+        text-align: left;
+        vertical-align: middle; /* Vertically center content */
+      }
+
+      /* Table Header Styling */
+      #teamListTable th {
+        background-color: #007bff; /* Blue background for header */
+        color: white;
+        font-weight: bold;
+      }
+
+      /* Alternating Row Colors */
+      #teamListTable tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      /* Input Field and Textarea Styling */
+      #teamListTable input[type="text"],
+      #teamListTable textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical; /* Allow vertical resizing of textarea */
+      }
+
+      /* Textarea Styling */
+      #teamListTable textarea {
+        min-height: 60px; /* Set minimum height for textarea */
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+      }
+
+      /* Additional Styles */
+      .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close-button:hover,
+      .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      #resultsModal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      #resultsModal .modal-content {
+        margin: 10% auto; /* Top/bottom margin, auto left/right for horizontal centering */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+        text-align: center; /* Center the table within the modal */
+      }
+
+      /* Centering for the table container (if needed) */
+      #resultsModal #resultsTableContainer {
+        display: inline-block; /* Allow text-align to center it */
+      }
+
+      #scoreRoomSettingsModal .modal-content table {
+        width: 100%; /* Make the table full width */
+      }
+
+      /* Score Room Settings Modal */
+      #scoreRoomSettingsModal .modal-content {
+        background-color: #333; /* Dark background */
+        color: white; /* Light text color */
+        width: 400px; /* Adjust width as needed */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+      }
+
+      #scoreRoomSettingsModal h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      #scoreRoomSettingsTable {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      #scoreRoomSettingsTable th,
+      #scoreRoomSettingsTable td {
+        padding: 10px;
+        border-bottom: 1px solid #555; /* Subtle horizontal lines between rows */
+      }
+
+      #scoreRoomSettingsTable th {
+        text-align: left;
+      }
+
+      #scoreRoomSettingsTable input[type="text"],
+      #scoreRoomSettingsTable input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #555;
+        border-radius: 4px;
+        background-color: #444; /* Darker input background */
+        color: white;
+      }
+
+      #scoreRoomSelect {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 2px solid #007bff; /* Blue border for select */
+        border-radius: 4px;
+        background-color: #444;
+        color: white;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+
+      #createScoreRoomButton {
+        width: 100%;
+      }
+
+      /* Share Score Room Link Styling */
+      #shareScoreRoomLink {
+        /*width: 100%;*/
+        height: 80%;
+        padding: 8px;
+        border: 1px solid #555;
+        border-radius: 4px;
+        background-color: #444;
+        color: white;
+        resize: none;
+      }
+
+      /* Dark Mode Styles */
+      body.dark-mode {
+        background-color: #222; /* Dark background for body */
+        color: #e8e6e3; /* Light text color */
+      }
+
+      /* General element styles in dark mode */
+      body.dark-mode h1,
+      body.dark-mode h2,
+      body.dark-mode h3,
+      body.dark-mode p,
+      body.dark-mode label,
+      body.dark-mode button {
+        color: #e8e6e3; /* Light text for headings and other elements */
+      }
+
+      /* Table Styles */
+      body.dark-mode #gameScores,
+      body.dark-mode .gameScores,
+      body.dark-mode #teamListTable {
+        background-color: #333;
+        color: #e8e6e3;
+        border-color: #555;
+      }
+
+      body.dark-mode #gameScores th,
+      body.dark-mode .gameScores th,
+      body.dark-mode #teamListTable th {
+        background-color: #343a40; /* Darker header background */
+      }
+
+      body.dark-mode #gameScores tr:nth-child(even),
+      body.dark-mode .gameScores tr:nth-child(even),
+      body.dark-mode #teamListTable tr:nth-child(even) {
+        background-color: #282828;
+      }
+
+      /* Input, Select, and Textarea Styles */
+      body.dark-mode input,
+      body.dark-mode select,
+      body.dark-mode textarea {
+        background-color: #333;
+        color: #e8e6e3;
+        border-color: #555;
+      }
+
+      body.dark-mode #teamListTable input[type="text"],
+      body.dark-mode #teamListTable textarea {
+        background-color: #444; /* Slightly lighter background for inputs/textareas */
+        color: #e8e6e3; /* Keep light text color for better contrast */
+        border-color: #666; /* Slightly darker border */
+      }
+
+      /* Map Select Styling (Dark Mode) */
+      body.dark-mode #gameScores select#maps,
+      body.dark-mode .gameScores select#maps {
+        background-color: #333; /* Dark background */
+        color: #e8e6e3; /* Light text */
+        border-color: #555; /* Slightly lighter border */
+      }
+
+      /* Custom Arrow for Select (Dark Mode) */
+      body.dark-mode #gameScores select#maps::after,
+      body.dark-mode .gameScores select#maps::after {
+        content: "▼"; /* Downward arrow */
+        color: #e8e6e3; /* Light arrow color */
+      }
+
+      /* Hover Effect (Dark Mode) */
+      body.dark-mode #gameScores select#maps:hover,
+      body.dark-mode .gameScores select#maps:hover {
+        background-color: #444; /* Slightly lighter background on hover */
+        border-color: #666; /* Slightly darker border on hover */
+      }
+
+      /* Dark Mode Styles for Team List Modal */
+      body.dark-mode .modal-content {
+        background-color: #333; /* Dark background for modal content */
+        color: #e8e6e3; /* Light text color for modal content */
+        border-color: #555; /* Darker border for modal content */
+      }
+
+      body.dark-mode .modal-content h2 {
+        color: #e8e6e3; /* Light text for modal header */
+      }
+
+      body.dark-mode .close-button {
+        color: #e8e6e3; /* Light close button in dark mode */
+      }
+
+      .invalidSelection {
+        background-color: rgb(252, 39, 39); /* Or any other color you prefer */
+      }
+
+      body.dark-mode .invalidSelection {
+        background-color: rgb(190, 29, 29); /* Or any other color you prefer */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mainContainer">
+      <div id="tablesContainer"></div>
+      <div id="buttonContainer">
+        <button id="addTableButton" class="addTableButton">Add New Game</button>
+        <button id="manageTeamsButton" class="addTableButton">
+          Manage Teams
+        </button>
+        <button id="darkModeToggle" class="addTableButton">Dark Mode</button>
+        <button id="previewResults" class="addTableButton">
+          Preview Results
+        </button>
+        <button
+          id="scoreRoomSettingsButton"
+          class="addTableButton"
+          onclick="openScoreRoomSettingsModal()"
+        >
+          Manage Score Rooms
+        </button>
+      </div>
+    </div>
+
+    <div id="teamListModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2>Manage Teams</h2>
+        <table id="teamListTable"></table>
+      </div>
+    </div>
+
+    <div id="resultsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeResultsModal()">&times;</span>
+        <h2>Preview Results</h2>
+        <div id="resultsTableContainer"></div>
+      </div>
+    </div>
+
+    <div id="scoreRoomSettingsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeScoreRoomSettingsModal()"
+          >&times;</span
+        >
+        <h2>Score Room Settings</h2>
+        <table id="scoreRoomSettingsTable">
+          <tr>
+            <th>Setting</th>
+            <th>Value</th>
+          </tr>
+          <tr style="display: none">
+            <td>Score Room Nick Name:</td>
+            <td>
+              <input type="text" id="scoreRoomNameInput" value="default" />
+            </td>
+          </tr>
+          <tr>
+            <td>Score Room Date:</td>
+            <td><input type="date" id="scoreRoomDateInput" /></td>
+          </tr>
+          <tr>
+            <td>Score Room Lobby:</td>
+            <td><input type="text" id="scoreRoomLobbyInput" /></td>
+          </tr>
+          <tr>
+            <td>Score Room Server:</td>
+            <td><input type="text" id="scoreRoomServerInput" /></td>
+          </tr>
+          <tr>
+            <td>Score Room Nickname:</td>
+            <td><input type="text" id="scoreRoomNicknameInput" /></td>
+          </tr>
+        </table>
+
+        <h3>Score Room Selector</h3>
+        <select id="scoreRoomSelect"></select>
+
+        <div >
+          <button id="createScoreRoomButton" class="addTableButton" style="margin-bottom: 10px;">
+            Create Score Room
+          </button>
+
+          <button id="deleteScoreRoomButton" class="addTableButton" style="margin-bottom: 10px;">
+            Delete Score Room
+          </button>
+        </div>
+
+        <h3>Share Score Room</h3>
+          <p id="shareScoreRoomLink"></p>
+      </div>
+    </div>
+    <script></script>
+    <script src="./darkmode.js"></script>
+    <script src="./frontend.js"></script>
+    <script src="./middleman.js"></script>
+    <script src="./teamTables.js"></script>
+    <script src="./gamesTables.js"></script>
+    <script src="./results.js"></script>
+    <script src="./scoreroomsettings.js"></script>
+    <script src="activeusercolor.js"></script>
+    <script>
+      if (currentScoreRoom) {
+        loadCurrentScoreRoom();
+        openScoreRoomSettingsModal();
+      } else {
+        openScoreRoomSettingsModal();
+      }
+    </script>
+  </body>
+</html>

@@ -40,7 +40,6 @@ function openScoreRoomSettingsModal() {
 // Function to load settings for a specific score room
 function loadScoreRoomSettings(scoreRoomName) {
   const settings = scoreRoomData.scoreRoomSettings || {};
-  scoreRoomNameInput.value = scoreRoomName;
   scoreRoomDateInput.value = settings.date || "";
   scoreRoomLobbyInput.value = settings.lobby || "";
   scoreRoomServerInput.value = settings.server || "";
@@ -51,7 +50,6 @@ function loadScoreRoomSettings(scoreRoomName) {
 
 // Function to save settings for a specific score room
 function saveScoreRoomSettings() {
-  const scoreRoomName = scoreRoomNameInput.value.trim();
   //scoreRooms[scoreRoomName] = scoreRooms[scoreRoomName] || {}; // Create if not exists
   scoreRoomData.scoreRoomSettings = {
     date: scoreRoomDateInput.value,

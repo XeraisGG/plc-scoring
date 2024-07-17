@@ -794,7 +794,7 @@ function saveCurrentScoreRoomData () {
   updateTeamDataFromTable();
   saveScoreRoomSettings();
   communicate2Backend(
-    "save",
+    "update",
     currentScoreRoom,
     scoreRoomData
   );

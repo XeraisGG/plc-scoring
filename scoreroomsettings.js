@@ -9,6 +9,7 @@ const scoreRoomNameInput = document.getElementById("scoreRoomNameInput");
 const scoreRoomDateInput = document.getElementById("scoreRoomDateInput");
 const scoreRoomLobbyInput = document.getElementById("scoreRoomLobbyInput");
 const scoreRoomServerInput = document.getElementById("scoreRoomServerInput");
+const scorescrimNameInput = document.getElementById("scoreRoomScrimNameInput");
 const scoreRoomNicknameInput = document.getElementById(
   "scoreRoomNicknameInput"
 );
@@ -44,7 +45,8 @@ function loadScoreRoomSettings(scoreRoomName) {
   scoreRoomLobbyInput.value = settings.lobby || "";
   scoreRoomServerInput.value = settings.server || "";
   scoreRoomNicknameInput.value = settings.nickname || "";
-  updateShareLink();
+  scorescrimNameInput.value = settings.scrimName || "";
+  updateShareLink(scoreRoomName);
 }
 
 // Function to save settings for a specific score room
@@ -56,6 +58,7 @@ function saveScoreRoomSettings() {
     lobby: scoreRoomLobbyInput.value,
     server: scoreRoomServerInput.value,
     nickname: scoreRoomNicknameInput.value,
+    scrimName: scorescrimNameInput.value,
   };
 
   scoreRoomIds[currentScoreRoom] = scoreRoomNicknameInput.value || null;
@@ -83,13 +86,14 @@ function populateScoreRoomSelect(currentScoreRoom) {
   loadScoreRoomSettings(currentScoreRoom);
 }
 
-function updateShareLink() {
+function updateShareLink(scoreRoomName) {
   const shareLinkElement = document.getElementById("shareScoreRoomLink");
-  const currentUrl = new URL(window.location.href);
+  const currentUrl = new URL(window.location.href);//
+  console.log(`${scoreRoomName} : ${scoreRoomIds[scoreRoomName]}`);
 
-  if (scoreRoomIds[currentScoreRoom]) {
+  if (scoreRoomIds[scoreRoomName]) {
     // Check if score room ID exists
-    currentUrl.searchParams.set("shareId", currentScoreRoom);
+    currentUrl.searchParams.set("shareId", scoreRoomName);
     shareLinkElement.textContent = currentUrl.toString();
   } else {
     shareLinkElement.textContent = "Score Room ID not yet generated."; // Display a message if no ID

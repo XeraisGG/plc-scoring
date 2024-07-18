@@ -1340,7 +1340,7 @@ const errorList = document.getElementById("errorList");   // Get the error list 
 printResultsButton.addEventListener("click", () => {
   getGameData()
   // Check if game data is valid 
-  const gameData = getGameData(currentScoreRoom);
+  const gameData = getGameData();
   const errors = validateGameData(gameData);
   if (errors.length === 0) {
     //If there are no errors
@@ -1359,6 +1359,21 @@ printResultsButton.addEventListener("click", () => {
 // Create a function to validate the game data
 function validateGameData(gameData) {
   const errors = []; // Array to store errors
+
+  // Check if required score room settings are present and not empty
+  const settings = scoreRoomData.scoreRoomSettings;
+  if (!settings.date || settings.date.trim() === "") {
+    errors.push("Score Room: Date is required.");
+  }
+  if (!settings.lobby || settings.lobby.trim() === "") {
+    errors.push("Score Room: Lobby ID is required.");
+  }
+  if (!settings.server || settings.server.trim() === "") {
+    errors.push("Score Room: Server is required.");
+  }
+  if (!settings.scrimName || settings.scrimName.trim() === "") {
+    errors.push("Score Room: Scrim Name is required.");
+  }
 
   for (const gameNumber in gameData) {
     const matchData = gameData[gameNumber];

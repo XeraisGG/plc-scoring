@@ -31,713 +31,80 @@ const placementPoints = {
 
 let scoreRoomIds = {};
 
-let rawScoreRoomIds = localStorage.getItem("scoreRoomIds");
+let firstTimeLoaded = true;
 
-if (rawScoreRoomIds) {
-  scoreRoomIds = JSON.parse(rawScoreRoomIds);
+let changesMade = false;
+const saveIndicator = document.getElementById("saveIndicator");
+
+// Function to control the changesMade variable
+function setChangesMade(hasChanges) {
+  changesMade = hasChanges;
+  printResultsButton.disabled = false;
+  saveIndicator.style.display = changesMade ? "block" : "none";
 }
 
-// Get the current URL object
-const currentUrl = new URL(window.location.href);
-
-// Get the query parameters as a URLSearchParams object
-const params = currentUrl.searchParams;
-
-// Check if the "roomId" parameter exists
-const shareId = params.get("shareId");
-
-let currentScoreRoom = Object.keys(scoreRoomIds)[0];
-
-let scoreRoomData = {
-  _id: "66962249dfe4320808764e57",
-  teamData: {
-    3: {
-      slot: 3,
-      name: "STRANGERS",
-      tag: "STES",
-      notes: "",
-    },
-    4: {
-      slot: 4,
-      name: "SENTINELS",
-      tag: "SEN",
-      notes: "",
-    },
-    5: {
-      slot: 5,
-      name: "OLD GANGSTERS",
-      tag: "OGX",
-      notes: "",
-    },
-    6: {
-      slot: 6,
-      name: "INFINITY REAPERS",
-      tag: "I69",
-      notes: "",
-    },
-    7: {
-      slot: 7,
-      name: "INFERNO ESPORTS",
-      tag: "INFX",
-      notes: "",
-    },
-    8: {
-      slot: 8,
-      name: "NEBULA",
-      tag: "NEB",
-      notes: "",
-    },
-    9: {
-      slot: 9,
-      name: "DAUNTLESS",
-      tag: "DAUNT",
-      notes: "",
-    },
-    10: {
-      slot: 10,
-      name: "ZENITHS",
-      tag: "ZENX",
-      notes: "",
-    },
-    11: {
-      slot: 11,
-      name: "SECTOR 11",
-      tag: "11SEC",
-      notes: "",
-    },
-    12: {
-      slot: 12,
-      name: "SENECA ESPORTS",
-      tag: "SE",
-      notes: "",
-    },
-    13: {
-      slot: 13,
-      name: "CYBER SOLDIERS",
-      tag: "CS",
-      notes: "",
-    },
-    14: {
-      slot: 14,
-      name: "TEAM FATE",
-      tag: "FATE",
-      notes: "",
-    },
-    15: {
-      slot: 15,
-      name: "SKY",
-      tag: "SKY",
-      notes: "",
-    },
-    16: {
-      slot: 16,
-      name: "RAIN ESPORTS",
-      tag: "RAIN",
-      notes: "",
-    },
-    17: {
-      slot: 17,
-      name: "YUNGVAMPLIFE",
-      tag: "VAMP",
-      notes: "",
-    },
-    18: {
-      slot: 18,
-      name: "JATTS ESPORTS",
-      tag: "JATTSメ",
-      notes: "",
-    },
-    19: {
-      slot: 19,
-      name: "SKILLS OF MIND",
-      tag: "SOM",
-      notes: "",
-    },
-    20: {
-      slot: 20,
-      name: "NRG GALAXY",
-      tag: "NRG",
-      notes: "",
-    },
-    21: {
-      slot: 21,
-      name: "DARK ESPORTS",
-      tag: "DARK",
-      notes: "",
-    },
-    22: {
-      slot: 22,
-      name: "MIXED MAFIA",
-      tag: "MM",
-      notes: "",
-    },
-    23: {
-      slot: 23,
-      name: "TEAM ACES",
-      tag: "ACES",
-      notes: "",
-    },
-    24: {
-      slot: 24,
-      name: "REDSTORM",
-      tag: "RDS",
-      notes: "",
-    },
-    25: {
-      slot: 25,
-      name: "Illegal Immigrants",
-      tag: "Foxi",
-      notes: "",
-    },
-  },
-  scoreRoomSettings: {
-    date: "2024-07-16",
-    lobby: "1",
-    server: "Region 8 Gaming",
-    nickname: "",
-  },
-  gameData: {
-    1: {
-      placements: {
-        1: {
-          teamName: "DAUNTLESS",
-          teamTag: "DAUNT",
-          teamEliminations: 10,
-          noScore: false,
-        },
-        2: {
-          teamName: "ZENITHS",
-          teamTag: "ZENX",
-          teamEliminations: 14,
-          noScore: false,
-        },
-        3: {
-          teamName: "NEBULA",
-          teamTag: "NEB",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        4: {
-          teamName: "SKY",
-          teamTag: "SKY",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        5: {
-          teamName: "SENTINELS",
-          teamTag: "SEN",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        6: {
-          teamName: "INFINITY REAPERS",
-          teamTag: "I69",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        7: {
-          teamName: "JATTS ESPORTS",
-          teamTag: "JATTSメ",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        8: {
-          teamName: "TEAM FATE",
-          teamTag: "FATE",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        9: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        10: {
-          teamName: "SECTOR 11",
-          teamTag: "11SEC",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        11: {
-          teamName: "TEAM ACES",
-          teamTag: "ACES",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        12: {
-          teamName: "SKILLS OF MIND",
-          teamTag: "SOM",
-          teamEliminations: 5,
-          noScore: false,
-        },
-        13: {
-          teamName: "REDSTORM",
-          teamTag: "RDS",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        14: {
-          teamName: "SENECA ESPORTS",
-          teamTag: "SE",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        15: {
-          teamName: "OLD GANGSTERS",
-          teamTag: "OGX",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        16: {
-          teamName: "NRG GALAXY",
-          teamTag: "NRG",
-          teamEliminations: 8,
-          noScore: false,
-        },
-        17: {
-          teamName: "MIXED MAFIA",
-          teamTag: "MM",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        18: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        19: {
-          teamName: "CYBER SOLDIERS",
-          teamTag: "CS",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        20: {
-          teamName: "INFINITY REAPERS",
-          teamTag: "I69",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        21: {
-          teamName: "Illegal Immigrants",
-          teamTag: "Foxi",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        22: {
-          teamName: "STRANGERS",
-          teamTag: "STES",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        23: {
-          teamName: "DARK ESPORTS",
-          teamTag: "DARK",
-          teamEliminations: 1,
-          noScore: false,
-        },
-      },
-      map: "Erangel",
-      noScoreTeams: [],
-    },
-    2: {
-      placements: {
-        1: {
-          teamName: "REDSTORM",
-          teamTag: "RDS",
-          teamEliminations: 9,
-          noScore: false,
-        },
-        2: {
-          teamName: "DARK ESPORTS",
-          teamTag: "DARK",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        3: {
-          teamName: "NEBULA",
-          teamTag: "NEB",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        4: {
-          teamName: "DAUNTLESS",
-          teamTag: "DAUNT",
-          teamEliminations: 12,
-          noScore: false,
-        },
-        5: {
-          teamName: "Illegal Immigrants",
-          teamTag: "Foxi",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        6: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        7: {
-          teamName: "SECTOR 11",
-          teamTag: "11SEC",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        8: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        9: {
-          teamName: "NRG GALAXY",
-          teamTag: "NRG",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        10: {
-          teamName: "SKY",
-          teamTag: "SKY",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        11: {
-          teamName: "INFERNO ESPORTS",
-          teamTag: "INFX",
-          teamEliminations: 10,
-          noScore: false,
-        },
-        12: {
-          teamName: "JATTS ESPORTS",
-          teamTag: "JATTSメ",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        13: {
-          teamName: "TEAM FATE",
-          teamTag: "FATE",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        14: {
-          teamName: "SENECA ESPORTS",
-          teamTag: "SE",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        15: {
-          teamName: "STRANGERS",
-          teamTag: "STES",
-          teamEliminations: 13,
-          noScore: false,
-        },
-        16: {
-          teamName: "TEAM ACES",
-          teamTag: "ACES",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        17: {
-          teamName: "SENTINELS",
-          teamTag: "SEN",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        18: {
-          teamName: "CYBER SOLDIERS",
-          teamTag: "CS",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        19: {
-          teamName: "ZENITHS",
-          teamTag: "ZENX",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        20: {
-          teamName: "SKILLS OF MIND",
-          teamTag: "SOM",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        21: {
-          teamName: "INFINITY REAPERS",
-          teamTag: "I69",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        22: {
-          teamName: "OLD GANGSTERS",
-          teamTag: "OGX",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        23: {
-          teamName: "MIXED MAFIA",
-          teamTag: "MM",
-          teamEliminations: 0,
-          noScore: false,
-        },
-      },
-      map: "Miramar",
-      noScoreTeams: [],
-    },
-    3: {
-      placements: {
-        1: {
-          teamName: "INFINITY REAPERS",
-          teamTag: "I69",
-          teamEliminations: 11,
-          noScore: false,
-        },
-        2: {
-          teamName: "JATTS ESPORTS",
-          teamTag: "JATTSメ",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        3: {
-          teamName: "DAUNTLESS",
-          teamTag: "DAUNT",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        4: {
-          teamName: "ZENITHS",
-          teamTag: "ZENX",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        5: {
-          teamName: "REDSTORM",
-          teamTag: "RDS",
-          teamEliminations: 4,
-          noScore: false,
-        },
-        6: {
-          teamName: "STRANGERS",
-          teamTag: "STES",
-          teamEliminations: 9,
-          noScore: false,
-        },
-        7: {
-          teamName: "NEBULA",
-          teamTag: "NEB",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        8: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        9: {
-          teamName: "DARK ESPORTS",
-          teamTag: "DARK",
-          teamEliminations: 7,
-          noScore: false,
-        },
-        10: {
-          teamName: "NRG GALAXY",
-          teamTag: "NRG",
-          teamEliminations: 7,
-          noScore: false,
-        },
-        11: {
-          teamName: "INFERNO ESPORTS",
-          teamTag: "INFX",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        12: {
-          teamName: "Illegal Immigrants",
-          teamTag: "Foxi",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        13: {
-          teamName: "SENECA ESPORTS",
-          teamTag: "SE",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        14: {
-          teamName: "SENTINELS",
-          teamTag: "SEN",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        15: {
-          teamName: "SKILLS OF MIND",
-          teamTag: "SOM",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        16: {
-          teamName: "SKY",
-          teamTag: "SKY",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        17: {
-          teamName: "SECTOR 11",
-          teamTag: "11SEC",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        18: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        19: {
-          teamName: "OLD GANGSTERS",
-          teamTag: "OGX",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        20: {
-          teamName: "TEAM ACES",
-          teamTag: "ACES",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        21: {
-          teamName: "CYBER SOLDIERS",
-          teamTag: "CS",
-          teamEliminations: 0,
-          noScore: false,
-        },
-      },
-      map: "Sanhok",
-      noScoreTeams: [],
-    },
-    4: {
-      placements: {
-        1: {
-          teamName: "SKILLS OF MIND",
-          teamTag: "SOM",
-          teamEliminations: 13,
-          noScore: false,
-        },
-        2: {
-          teamName: "DAUNTLESS",
-          teamTag: "DAUNT",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        3: {
-          teamName: "REDSTORM",
-          teamTag: "RDS",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        4: {
-          teamName: "NRG GALAXY",
-          teamTag: "NRG",
-          teamEliminations: 7,
-          noScore: false,
-        },
-        5: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        6: {
-          teamName: "NEBULA",
-          teamTag: "NEB",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        7: {
-          teamName: "ZENITHS",
-          teamTag: "ZENX",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        8: {
-          teamName: "SECTOR 11",
-          teamTag: "11SEC",
-          teamEliminations: 6,
-          noScore: false,
-        },
-        9: {
-          teamName: "INFINITY REAPERS",
-          teamTag: "I69",
-          teamEliminations: 3,
-          noScore: false,
-        },
-        10: {
-          teamName: "RAIN ESPORTS",
-          teamTag: "RAIN",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        11: {
-          teamName: "STRANGERS",
-          teamTag: "STES",
-          teamEliminations: 13,
-          noScore: false,
-        },
-        12: {
-          teamName: "JATTS ESPORTS",
-          teamTag: "JATTSメ",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        13: {
-          teamName: "INFERNO ESPORTS",
-          teamTag: "INFX",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        14: {
-          teamName: "DARK ESPORTS",
-          teamTag: "DARK",
-          teamEliminations: 0,
-          noScore: false,
-        },
-        15: {
-          teamName: "OLD GANGSTERS",
-          teamTag: "OGX",
-          teamEliminations: 2,
-          noScore: false,
-        },
-        16: {
-          teamName: "SENECA ESPORTS",
-          teamTag: "SE",
-          teamEliminations: 1,
-          noScore: false,
-        },
-        17: {
-          teamName: "TEAM ACES",
-          teamTag: "ACES",
-          teamEliminations: 1,
-          noScore: false,
-        },
-      },
-      map: "Erangel",
-      noScoreTeams: [],
-    },
-  },
-};
-
-if (shareId) {
-  console.log("shareId:", shareId); // Log the roomId if it exists
-  addNewScoreRoom(shareId);
-  params.delete("shareId"); // Remove the roomId parameter
-
-  // Update the URL without a full reload (using history.replaceState)
-  const newUrl = `${currentUrl.origin}${currentUrl.pathname
-    }?${params.toString()}`;
-  window.history.replaceState({}, document.title, newUrl);
+function isOnline() {
+  return navigator.onLine;
 }
+
+const onlineIndicator = document.getElementById("onlineIndicator");
+
+function updateOnlineStatus() {
+  const online = isOnline();
+  onlineIndicator.style.display = "block"; // Show the indicator
+  if (online) {
+    onlineIndicator.classList.remove("offline");
+    onlineIndicator.title = "Online"; // Tooltip
+  } else {
+    onlineIndicator.classList.add("offline");
+    onlineIndicator.title = "Offline";
+  }
+}
+
+// Initial check on page load
+updateOnlineStatus();
+
+let lastSaveTime = 0; // Variable to track the last save time
+
+let currentScoreRoom = "";
+
+async function validateAndCleanScoreRoomIds() {
+  let rawScoreRoomIds = localStorage.getItem("scoreRoomIds");
+  if (rawScoreRoomIds) {
+    const storedScoreRoomIds = JSON.parse(rawScoreRoomIds);
+    const validScoreRoomIds = {}; // Store valid IDs here
+
+    for (const scoreRoomName in storedScoreRoomIds) {
+      const roomId = storedScoreRoomIds[scoreRoomName];
+      const response = await communicate2Backend("GET", scoreRoomName); // Check if exists on the backend
+
+      if (response && response.success) {
+        validScoreRoomIds[scoreRoomName] = null; // Keep if valid
+      } else {
+        console.warn(`Invalid score room ID removed: ${scoreRoomName} (${roomId})`);
+      }
+    }
+
+    if (Object.keys(validScoreRoomIds).length === 0) {
+      // If no valid rooms found, create a new default room
+      createNewScoreRoom();
+    } else {
+      // Update scoreRoomIds in local storage
+      localStorage.setItem("scoreRoomIds", JSON.stringify(validScoreRoomIds));
+
+      scoreRoomIds = validScoreRoomIds;
+
+      // Set currentScoreRoom to the first valid room
+      currentScoreRoom = Object.keys(validScoreRoomIds)[0];
+    }
+  } else {
+    createNewScoreRoom();
+  }
+}
+
+//console.log(currentScoreRoom);
+
+let scoreRoomData = {};
 
 function addNewScoreRoom(shareId) {
   if (scoreRoomIds[shareId]) { return }
@@ -746,25 +113,58 @@ function addNewScoreRoom(shareId) {
     if (result) {
       scoreRoomIds[shareId] = result.scoreRoomSettings.nickname || null;
       localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+      populateScoreRoomSelect();
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }
   });
 }
 
+const loadScoreRoomButton = document.getElementById("loadScoreRoomButton");
+const loadScoreRoomInput = document.getElementById("loadScoreRoomInput");
+
+loadScoreRoomButton.addEventListener("click", async () => {
+  const enteredRoomId = loadScoreRoomInput.value.trim();
+  loadScoreRoomInput.classList.remove("invalid-input"); // Remove invalid class before checking
+  if (enteredRoomId) {
+
+
+    communicate2Backend("get", enteredRoomId).then((data) => {
+      const result = data.scoreRoomData;
+      if (result) {
+        scoreRoomIds[enteredRoomId] =
+          scoreRoomData.scoreRoomSettings.nickname || null;
+        localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+        populateScoreRoomSelect();
+      } else {
+        // Visual error handling: add a class to the input
+        loadScoreRoomInput.classList.add("invalid-input");
+        loadScoreRoomInput.value = ""; // Clear the input field
+        loadScoreRoomInput.placeholder = "Not a valid room ID";
+      }
+    });
+
+  }
+});
+
 async function loadCurrentScoreRoom() {
+  //console.log(currentScoreRoom);
   communicate2Backend("get", currentScoreRoom).then((data) => {
     const result = data.scoreRoomData;
+    //console.log(data)
     if (result) {
       scoreRoomData = data.scoreRoomData;
+      if (firstTimeLoaded) {
+        openScoreRoomSettingsModal();
+        firstTimeLoaded = false;
+      }
       populateTeamList();
       const totalSavedMatches = Object.keys(scoreRoomData.gameData).length;
       const tables = tablesContainer.querySelectorAll(".gameScores");
-
-      for (let i = tables.length; i < totalSavedMatches; i++) {
+      const tablesNeeded = (totalSavedMatches < 1) ? 1 : totalSavedMatches;
+      for (let i = tables.length; i < tablesNeeded; i++) {
         addTable();
       }
-      saveCurrentScoreRoomData();
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }
@@ -773,6 +173,7 @@ async function loadCurrentScoreRoom() {
 
 // Function to get a score room
 async function communicate2Backend(method = "get", roomId = "1234567890", scoreRoomData = null) {
+  //console.log(roomId);
   try {
     // Google Apps Script web app URL
     const apiUrl = "https://script.google.com/macros/s/AKfycbwzKSkiCanvw_F2yOTZhumh06q4k5Y7CKoTZ_Cjg1n2pyHtyQJUldO5fFx-rHZFHIzo0w/exec";
@@ -825,14 +226,22 @@ async function communicate2Backend(method = "get", roomId = "1234567890", scoreR
 }
 
 function saveCurrentScoreRoomData() {
+  const currentTime = Date.now();
+  if (!isOnline() || !changesMade ||
+    !currentScoreRoom ||
+    currentScoreRoom.trim() == "" ||
+    currentTime - lastSaveTime < 3000 // 15 seconds in milliseconds
+  ) { return }
   getGameData();
   updateTeamDataFromTable();
   saveScoreRoomSettings();
+  //console.log(currentScoreRoom);
   communicate2Backend(
     "update",
     currentScoreRoom,
     scoreRoomData
-  );
+  ).then(() => setChangesMade(false));
+
 }
 
 function handleError(message) {
@@ -915,6 +324,7 @@ function openModal() {
 // Function to close the modal
 function closeModal() {
   updateTeamDataFromTable();
+  setChangesMade(true);
   teamListModal.style.display = "none";
 }
 
@@ -1066,7 +476,7 @@ function createTable() {
   let matchData;
   if (scoreRoomData.gameData[currentGame]) {
     matchData = scoreRoomData.gameData[currentGame].placements;
-    //console.log(matchData);
+    //console.log(scoreRoomData.gameData[currentGame]);
   }
 
   let teamOptions = [];
@@ -1234,8 +644,8 @@ function createTable() {
     noScoreCheckbox.checked = noScore;
 
     // Event Listener for input, select, and checkbox changes
-    row.addEventListener("input", () => {
-      getGameData(); // Call the function to update and save game data
+    row.addEventListener("change", () => {
+      setChangesMade(true);
     });
   }
 
@@ -1256,8 +666,8 @@ function createTable() {
     mapSelect.add(option);
   });
 
-  mapSelect.addEventListener("input", () => {
-    getGameData(); // Call the function to update and save game data
+  mapSelect.addEventListener("change", () => {
+    setChangesMade(true);
   });
 
   if (scoreRoomData.gameData[currentGame]) {
@@ -1467,6 +877,7 @@ function createStatsTable() {
   const statsTable = document.createElement("table");
   statsTable.id = "teamStatsTable";
   statsTable.classList.add("gameScores"); // Add styling class
+  statsTable.style.width = "100%";
 
   // Create header row
   const headerRow = statsTable.insertRow();
@@ -1522,11 +933,127 @@ function createStatsTable() {
   return statsTable;
 }
 
+// Function to create the "Match Winners" table
+function createMatchWinnersTable() {
+  // Get the game data
+  let gameData = scoreRoomData.gameData;
+  const winnersTable = document.createElement("table");
+  winnersTable.classList.add("gameScores"); // Add styling class
+
+  // Data header row
+  const dataHeaderRow = winnersTable.insertRow();
+  ["Map", "Team Name", "Eliminations"].forEach((headerText) => {
+    const th = document.createElement("th");
+    th.textContent = headerText;
+    dataHeaderRow.appendChild(th);
+  });
+
+  // Data rows
+  for (const gameNumber in gameData) {
+    const matchData = gameData[gameNumber];
+
+    const row = winnersTable.insertRow();
+    const mapCell = row.insertCell();
+    const teamNameCell = row.insertCell();
+    const eliminationsCell = row.insertCell();
+
+
+    if (matchData.placements && matchData.placements[1]) {
+      const winner = matchData.placements[1];
+      teamNameCell.textContent = winner.teamName;
+      eliminationsCell.textContent = winner.teamEliminations;
+    } else {
+      teamNameCell.textContent = "No Winner";
+      eliminationsCell.textContent = "-";
+    }
+
+    mapCell.textContent = matchData.map || "❌";
+  }
+
+  return winnersTable;
+}
+
+// Function to create the "Top Fragger" table
+function createTopFraggerTable() {
+  // Get the game data
+  let gameData = scoreRoomData.gameData;
+  const fraggersTable = document.createElement("table");
+  fraggersTable.classList.add("gameScores"); // Add styling class
+
+  // Header row
+
+  // Data header row
+  const dataHeaderRow = fraggersTable.insertRow();
+  ["Team Name", "Kills"].forEach((headerText) => {
+    const th = document.createElement("th");
+    th.textContent = headerText;
+    dataHeaderRow.appendChild(th);
+  });
+
+  // Data rows (populate with top fragger data from each match)
+  for (const gameNumber in gameData) {
+    const matchData = gameData[gameNumber];
+
+    // Find the top fragger
+    let topFragger = null;
+    let maxKills = -1;
+    for (const placement in matchData.placements) {
+      const playerData = matchData.placements[placement];
+      if (playerData.teamEliminations > maxKills && !playerData.noScore) {
+        topFragger = playerData;
+        maxKills = playerData.teamEliminations;
+      }
+    }
+
+    const row = fraggersTable.insertRow();
+    const teamNameCell = row.insertCell();
+    const eliminationsCell = row.insertCell();
+
+    if (topFragger) {
+      teamNameCell.textContent = topFragger.teamName;
+      eliminationsCell.textContent = topFragger.teamEliminations;
+    } else {
+      teamNameCell.textContent = "No Data"; // Or handle differently
+      eliminationsCell.textContent = "-";
+    }
+  }
+
+  return fraggersTable;
+}
+
 // Function to open the results modal
 function openResultsModal() {
+  const mainResultsTableContainer = document.getElementById(
+    "mainResultsTableContainer"
+  );
+  const extraResultsTableContainer = document.getElementById(
+    "extraResultsTableContainer"
+  );
+
+  // Clear containers
+  mainResultsTableContainer.innerHTML = "";
+  extraResultsTableContainer.innerHTML = "";
+
+  // Create and append tables with headings
   const statsTable = createStatsTable();
-  resultsTableContainer.innerHTML = ""; // Clear previous results
-  resultsTableContainer.appendChild(statsTable);
+  const statsTableHeading = document.createElement("h2");
+  statsTableHeading.textContent = "Team Standings";
+  statsTableHeading.style.marginBottom = "40px";
+  mainResultsTableContainer.appendChild(statsTableHeading);
+  mainResultsTableContainer.appendChild(statsTable);
+
+  const winnersTable = createMatchWinnersTable();
+  const winnersTableHeading = document.createElement("h2");
+  winnersTableHeading.textContent = "Map Winners";
+  extraResultsTableContainer.appendChild(winnersTableHeading);
+  extraResultsTableContainer.appendChild(winnersTable);
+
+  const fraggersTable = createTopFraggerTable();
+  const fraggersTableHeading = document.createElement("h2");
+  fraggersTableHeading.textContent = "Top Fragger";
+  extraResultsTableContainer.appendChild(fraggersTableHeading);
+  extraResultsTableContainer.appendChild(fraggersTable);
+
   resultsModal.style.display = "block";
 }
 function closeResultsModal() {
@@ -1534,6 +1061,8 @@ function closeResultsModal() {
 }
 previewResultsButton.addEventListener("click", () => {
   openResultsModal();
+  // Enable the Print Results button
+  printResultsButton.disabled = false;
 });
 
 const scoreRoomSettingsModal = document.getElementById(
@@ -1557,11 +1086,15 @@ const deleteScoreRoomButton = document.getElementById("deleteScoreRoomButton");
 
 // Function to close the score room settings modal
 function closeScoreRoomSettingsModal() {
-  currentScoreRoom = scoreRoomSelect.value;
-  saveScoreRoomSettings();
+  if (scoreRoomSelect.value !== '') {
+    currentScoreRoom = scoreRoomSelect.value;
+  }
   loadCurrentScoreRoom();
+  saveScoreRoomSettings();
+
 
   scoreRoomSettingsModal.style.display = "none";
+  setChangesMade(true);
 }
 
 // Function to open the score room settings modal to edit an EXISTING score room
@@ -1577,6 +1110,7 @@ function openScoreRoomSettingsModal() {
 
 // Function to load settings for a specific score room
 function loadScoreRoomSettings(scoreRoomName) {
+  //console.log(scoreRoomData.scoreRoomSettings)
   const settings = scoreRoomData.scoreRoomSettings || {};
   scoreRoomDateInput.value = settings.date || "";
   scoreRoomLobbyInput.value = settings.lobby || "";
@@ -1597,19 +1131,23 @@ function saveScoreRoomSettings() {
     scrimName: scorescrimNameInput.value,
   };
 
-  scoreRoomIds[currentScoreRoom] = scoreRoomNicknameInput.value || null;
-  localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+  if (currentScoreRoom) {
+    scoreRoomIds[currentScoreRoom] = scoreRoomNicknameInput.value || null;
+    localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
+  }
+  //console.log(scoreRoomData.scoreRoomSettings);
   //saveScoreRooms(); // Save all score rooms to local storage
 
   // Update the score room selector
-  populateScoreRoomSelect();
+  //populateScoreRoomSelect();
 }
 
 // Function to populate the score room selector
-function populateScoreRoomSelect(currentScoreRoom) {
+function populateScoreRoomSelect() {
   scoreRoomSelect.innerHTML = ""; // Clear existing options
-  console.log(scoreRoomIds);
+  //console.log(scoreRoomIds);
   const scoreRoomIdsArr = Object.keys(scoreRoomIds);
+  let selections = {};
   for (let i = 0; i < scoreRoomIdsArr.length; i++) {
     const id = scoreRoomIdsArr[i];
     const scoreRoomName = scoreRoomIds[id] || `Score Room ${i}`;
@@ -1617,40 +1155,61 @@ function populateScoreRoomSelect(currentScoreRoom) {
     option.value = id;
     option.text = scoreRoomName;
     scoreRoomSelect.add(option);
+    selections[id] = scoreRoomName;
   }
+  // Set the selected index to 0 (the first option)
+  scoreRoomSelect.selectedIndex = 0;
+
+  // Event listener for the score room select dropdown
+  scoreRoomSelect.addEventListener('change', () => {
+    const newScoreRoom = scoreRoomSelect.value;
+    if (newScoreRoom !== "") { // Only change if a valid score room is selected
+      currentScoreRoom = newScoreRoom;
+      loadScoreRoomSettings(currentScoreRoom);
+      loadCurrentScoreRoom();
+    }
+  });
   // Load settings for the currently selected score room after updating the dropdown
   loadScoreRoomSettings(currentScoreRoom);
 }
 
+const shareLinkElement = document.getElementById("shareScoreRoomLink");
+
 function updateShareLink(scoreRoomName) {
-  const shareLinkElement = document.getElementById("shareScoreRoomLink");
+
   const currentUrl = new URL(window.location.href);//
 
   if (scoreRoomName) {
     let rawScoreRoomIds = localStorage.getItem("scoreRoomIds");
 
-    if (rawScoreRoomIds) {
+    if (rawScoreRoomIds && !scoreRoomIds) {
       scoreRoomIds = JSON.parse(rawScoreRoomIds);
 
       scoreRoomName = scoreRoomIds[Object.keys(scoreRoomIds)[0]];
-      if (currentScoreRoom) {
-        currentScoreRoom = scoreRoomIds[Object.keys(scoreRoomIds)[0]];
-      } else {
-        console.log(`there is no current score room`)
-      }
     }
   }
 
-  console.log(`${scoreRoomName} : ${scoreRoomIds[scoreRoomName]}`);
+  //console.log(`${currentScoreRoom} : ${scoreRoomIds[currentScoreRoom]}`);
 
-  if (scoreRoomIds[scoreRoomName]) {
+  if (currentScoreRoom) {
     // Check if score room ID exists
-    currentUrl.searchParams.set("shareId", scoreRoomName);
-    shareLinkElement.textContent = currentUrl.toString();
+    currentUrl.searchParams.set("shareId", currentScoreRoom);
+    shareLinkElement.textContent = currentScoreRoom.toString();
   } else {
     shareLinkElement.textContent = "Score Room ID not yet generated."; // Display a message if no ID
   }
 }
+
+// Add click event listener to copy link
+shareLinkElement.addEventListener('click', async () => {
+  const linkToCopy = shareScoreRoomLink.textContent;
+  try {
+    await navigator.clipboard.writeText(linkToCopy);
+    alert('Score room link copied to clipboard!'); // Optional feedback to the user
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+  }
+});
 
 function createNewScoreRoom() {
   communicate2Backend("create").then((data) => {
@@ -1659,7 +1218,7 @@ function createNewScoreRoom() {
       currentScoreRoom = roomId;
       addNewScoreRoom(roomId);
       loadCurrentScoreRoom();
-      loadScoreRoomSettings(roomId);
+      scoreRoomSelect.selectedIndex = 1; // Set the index to 1
     } else {
       // Handle the error if the score room wasn't found or there was another error
     }
@@ -1669,14 +1228,7 @@ function createNewScoreRoom() {
 // Event listener for the "Score Room Settings" button
 scoreRoomSettingsButton.addEventListener("click", openScoreRoomSettingsModal); // Call openScoreRoomSettingsModal to open the existing modal
 
-// Event listener for the score room select dropdown
-scoreRoomSelect.addEventListener('change', () => {
-  const newScoreRoom = scoreRoomSelect.value;
-  if (newScoreRoom !== "") { // Only change if a valid score room is selected
-    currentScoreRoom = newScoreRoom;
-    loadCurrentScoreRoom();
-  }
-});
+
 
 createScoreRoomButton.addEventListener("click", createNewScoreRoom);
 
@@ -1689,13 +1241,14 @@ function deleteNewScoreRoom() {
     localStorage.setItem("scoreRoomIds", JSON.stringify(scoreRoomIds));
 
     // Additional actions you need to take after deleting:
-
+    console.log(Object.keys(scoreRoomIds).length)
     // - Update the score room select and load the default room
     if (Object.keys(scoreRoomIds).length < 1) {
       createNewScoreRoom();
+      scoreRoomSelect.selectedIndex = 1; // Set the index to 1
     }
 
-    scoreRoomSelect.selectedIndex = 1; // Set the index to 1
+    populateScoreRoomSelect();
 
     // You might also want to:
     // - Send a request to your backend to delete the score room from the database
@@ -1741,9 +1294,122 @@ function handleElementSelect(event) {
 // Add event listener to the tablesContainer
 tablesContainer.addEventListener("click", handleElementSelect);
 
-if (currentScoreRoom) {
-  loadCurrentScoreRoom();
-  openScoreRoomSettingsModal();
-} else {
-  openScoreRoomSettingsModal();
+// Function to save the current score room data
+function heartbeatsave() {
+  updateOnlineStatus();
+  if (currentScoreRoom.trim() !== "") {
+    //updateGameData(); // Update the game data for the current score room
+    saveCurrentScoreRoomData();
+  }
 }
+
+
+// Function to create the loading screen
+function createLoadingScreen() {
+  const loadingScreen = document.getElementById("loadingScreen");
+  const loadingAnimation = document.getElementById("loadingAnimation");
+
+  // Create circles for the animation
+  for (let i = 0; i < 5; i++) {
+    const circle = document.createElement("div");
+    circle.classList.add("circle");
+    const angle = (i * 72) * (Math.PI / 180); // Calculate angle for positioning
+    const x = 30 + 25 * Math.cos(angle);    // Calculate x coordinate
+    const y = 30 + 25 * Math.sin(angle);    // Calculate y coordinate
+    circle.style.left = `${x}px`;
+    circle.style.top = `${y}px`;
+    loadingAnimation.appendChild(circle);
+  }
+
+  loadingScreen.style.display = "flex"; // Show the loading screen
+}
+
+const printResultsButton = document.getElementById("printResultsButton");
+
+// Function to enable/disable print button
+function updatePrintButtonState() {
+  printResultsButton.disabled = !isGameDataValid();
+}
+
+// Event listener for the "Print Results" button
+const errorModal = document.getElementById("errorModal"); // Get the modal
+const errorList = document.getElementById("errorList");   // Get the error list element
+
+
+// Modify printResultsButton event listener
+printResultsButton.addEventListener("click", () => {
+  getGameData()
+  // Check if game data is valid 
+  const gameData = getGameData(currentScoreRoom);
+  const errors = validateGameData(gameData);
+  if (errors.length === 0) {
+    //If there are no errors
+    communicate2Backend("print", null, scoreRoomData).then((response) => {
+      if (response && response.success) {
+        // ... (Logic for handling the response from your backend) ...
+      } else {
+        console.error(response.error);
+      }
+    });
+  } else {
+    // Show the error modal with the list of errors
+    displayErrors(errors);
+  }
+});
+// Create a function to validate the game data
+function validateGameData(gameData) {
+  const errors = []; // Array to store errors
+
+  for (const gameNumber in gameData) {
+    const matchData = gameData[gameNumber];
+
+    // Check if map is selected
+    if (matchData.map === "") {
+      errors.push(`Game ${gameNumber}: No map selected.`);
+    }
+
+    // Check for duplicate teams
+    const teams = new Set();
+    for (const placement in matchData.placements) {
+      const teamName = matchData.placements[placement].teamName;
+      if (teams.has(teamName)) {
+        errors.push(`Game ${gameNumber}: Duplicate team "${teamName}".`);
+      }
+      teams.add(teamName);
+    }
+  }
+  return errors;
+}
+
+// Function to display errors in the modal
+function displayErrors(errors) {
+  errorList.innerHTML = ""; // Clear previous errors
+  errors.forEach(error => {
+    const listItem = document.createElement("li");
+    listItem.textContent = error;
+    errorList.appendChild(listItem);
+  });
+
+  errorModal.style.display = "block"; // Show the modal
+}
+
+// Function to close the error modal
+function closeErrorModal() {
+  errorModal.style.display = "none";
+}
+
+
+// Call on page load
+document.addEventListener("DOMContentLoaded", async () => {
+  //createLoadingScreen();
+  await validateAndCleanScoreRoomIds().then(() => {
+    if (currentScoreRoom) {
+      loadCurrentScoreRoom();
+      //document.getElementById("loadingScreen").style.display = "none";
+      setInterval(heartbeatsave, 5000); // 10000 milliseconds = 10 seconds
+    } else {
+      openScoreRoomSettingsModal();
+      setInterval(heartbeatsave, 5000); // 10000 milliseconds = 10 seconds
+    }
+  });
+});

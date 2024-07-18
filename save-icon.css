@@ -1,0 +1,45 @@
+/* Icon Container Styling */
+#iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+  
+}
+
+#saveIndicator,
+#onlineIndicator {
+  display: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 10%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  width: 24px; /* Adjust the size as needed */
+  height: 24px;
+  padding: 10px; /* Reduce padding to make icon larger within the circle */
+}
+
+#saveIndicator #icon,
+#onlineIndicator #icon {
+    font-size: 30px; /* Adjust font size to your liking */
+    margin-left: -8px;
+    margin-top: -8px;
+}
+
+/* Center Icons within Indicators */
+#saveIndicator::before,
+#onlineIndicator::before {
+  display: flex; /* Enable Flexbox for centering */
+  align-items: center; /* Vertically center */
+  font-size: 24px; /* Adjust font size to your liking */
+}
+/* Optional: Add icons or text to the indicators */
+
+/* Offline styling (you can customize this) */
+#onlineIndicator.offline {
+  background-color: #f44336; /* Red for offline */
+  color: white;
+}

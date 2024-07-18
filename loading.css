@@ -1,0 +1,56 @@
+#loadingScreen {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack logo and animation vertically */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  position: fixed; /* Cover the whole viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+  z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+#loadingLogo {
+  width: 200px; /* Adjust logo size as needed */
+  margin-bottom: 20px;
+}
+
+#loadingAnimation {
+  width: 60px;
+  height: 60px;
+}
+
+/* Animation for the circle of circles */
+.circle {
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  animation: spin 1s linear infinite; /* Each circle spins */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Different rotation for each circle */
+.circle:nth-child(1) {
+  animation-delay: -0.8s;
+}
+.circle:nth-child(2) {
+  animation-delay: -0.6s;
+}
+.circle:nth-child(3) {
+  animation-delay: -0.4s;
+}
+.circle:nth-child(4) {
+  animation-delay: -0.2s;
+}

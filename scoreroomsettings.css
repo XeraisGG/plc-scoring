@@ -1,73 +1,133 @@
 #scoreRoomSettingsModal .modal-content table {
-    width: 100%; /* Make the table full width */
-  }
+  width: 100%; /* Make the table full width */
+}
 
-  /* Score Room Settings Modal */
-  #scoreRoomSettingsModal .modal-content {
-    background-color: #333; /* Dark background */
-    color: white; /* Light text color */
-    width: 400px; /* Adjust width as needed */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
-  }
+/* Score Room Settings Modal */
+#scoreRoomSettingsModal .modal-content {
+  background-color: #333; /* Dark background */
+  color: white; /* Light text color */
+  width: 400px; /* Adjust width as needed */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+}
 
-  #scoreRoomSettingsModal h2 {
-    color: white;
-    text-align: center;
-    margin-bottom: 20px;
-  }
+#scoreRoomSettingsModal h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  #scoreRoomSettingsTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
+#scoreRoomSettingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
 
-  #scoreRoomSettingsTable th,
-  #scoreRoomSettingsTable td {
-    padding: 10px;
-    border-bottom: 1px solid #555; /* Subtle horizontal lines between rows */
-  }
+#scoreRoomSettingsTable th,
+#scoreRoomSettingsTable td {
+  padding: 10px;
+  border-bottom: 1px solid #555; /* Subtle horizontal lines between rows */
+}
 
-  #scoreRoomSettingsTable th {
-    text-align: left;
-  }
+#scoreRoomSettingsTable th {
+  text-align: left;
+}
 
-  #scoreRoomSettingsTable input[type="text"],
-  #scoreRoomSettingsTable input[type="date"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #555;
-    border-radius: 4px;
-    background-color: #444; /* Darker input background */
-    color: white;
-  }
+#scoreRoomSettingsTable input[type="text"],
+#scoreRoomSettingsTable input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #444; /* Darker input background */
+  color: white;
+}
 
-  #scoreRoomSelect {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 2px solid #007bff; /* Blue border for select */
-    border-radius: 4px;
-    background-color: #444;
-    color: white;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
+#scoreRoomSelect {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #007bff; /* Blue border for select */
+  border-radius: 4px;
+  background-color: #444;
+  color: white;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 
-  #createScoreRoomButton {
-    width: 100%;
-  }
+  /* Add a background image for the arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e8e6e3'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
 
-  /* Share Score Room Link Styling */
-  #shareScoreRoomLink {
-    /*width: 100%;*/
-    height: 80%;
-    padding: 8px;
-    border: 1px solid #555;
-    border-radius: 4px;
-    background-color: #444;
-    color: white;
-    resize: none;
-  }
+  /* Position and style the background image */
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Adjust position as needed */
+  padding-right: 30px; /* Add extra padding to the right for the arrow */
+  background-size: 20px; /* Adjust size as needed */
+}
+
+/* Hide the default dropdown arrow */
+#scoreRoomSelect::-ms-expand {
+  display: none;
+}
+
+#createScoreRoomButton {
+  width: 100%;
+}
+
+#shareLinkContainer {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Align the link and icon vertically */
+  height: 80%;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #444;
+  resize: none;
+}
+
+/* Share Score Room Link Styling */
+#shareScoreRoomLink {
+  /*width: 100%;*/
+  margin-right: 10px; /* Add some space between the link and icon */
+
+  color: white;
+}
+
+.copy-button {
+  background: none; /* Make the button transparent */
+  border: none; /* Remove border */
+  padding: 0; /* No padding */
+  font-size: 18px; /* Adjust icon size as needed */
+  color: black;
+}
+
+/* Load Score Room Container Styling */
+#loadScoreRoomContainer {
+  display: flex; /* Use flexbox for layout */
+  align-items: stretch; /* Make items stretch to fill container height */
+  margin-top: 10px; /* Add space above the container */
+}
+
+#loadScoreRoomInput {
+  width: 70%;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #444;
+  color: white;
+  margin-right: 5%;
+  /* Removed: height: 100%; */ /* This was causing issues in some browsers */
+}
+
+#loadScoreRoomButton {
+  width: 20%;
+  padding: 0; /* Remove padding from the button */
+  /* ... your other button styles (background, etc.) ... */
+}
+
+/* Add this rule to vertically center button content */
+#loadScoreRoomButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

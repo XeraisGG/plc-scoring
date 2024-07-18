@@ -1,24 +1,66 @@
 #resultsModal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
 
-  #resultsModal .modal-content {
-    margin: 10% auto; /* Top/bottom margin, auto left/right for horizontal centering */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 60%;
-    text-align: center; /* Center the table within the modal */
-  }
+/* Modal Content Styles */
+#resultsModal .modal-content {
+  display: flex; /* Enable flexbox for the modal content */
+  justify-content: space-around; /* Evenly distribute space around the containers */
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  flex-direction: column; /* Stack containers vertically */
+}
+/* Results Tables Container (new) */
+#resultsTablesContainer {
+  display: flex; /* Use flexbox for the two-column layout */
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: row; /* Stack containers horizontally */
+  text-align: center; /* Center the tables within the results table container */
+}
+/* Style the main results table container */
+/* Main Results Table Container Styling */
+#mainResultsTableContainer {
+  flex: 2; /* Main table takes up twice the space as the extra tables */
+  min-width: 300px;
+  margin-bottom: 20px; /* Add margin to separate from the extra tables */
+}
 
-  /* Centering for the table container (if needed) */
-  #resultsModal #resultsTableContainer {
-    display: inline-block; /* Allow text-align to center it */
-  }
+/* Extra Results Table Container Styling */
+#extraResultsTableContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  min-width: 250px; /* Set a minimum width for the extra tables */
+}
+
+/* Style the error modal content if needed */
+#errorModal .modal-content {
+  background-color: #fefefe;
+  width: 400px; /* Adjust width as needed */
+  /* ... other styles for the modal content ... */
+}
+
+#errorList {
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+  margin-top: 10px; /* Add some space above the list */
+}
+
+/* Error Modal Content (Dark Mode) */
+body.dark-mode #errorModal .modal-content {
+  background-color: #444; /* Dark grey background */
+  color: #e8e6e3; /* Light text color */
+}

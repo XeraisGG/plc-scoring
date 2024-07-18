@@ -21,11 +21,10 @@
         margin-top: 20px; /* Add some space above the slider */
       }
 
-
       #buttonContainer {
         display: flex;
         flex-direction: column; /* Stack buttons vertically */
-        width: 10vw; /* Set width to 10% of viewport width */
+        width: 15vw; /* Set width to 10% of viewport width */
         gap: 10px; /* Add some spacing between buttons */
         align-self: flex-start;
         align-items: center; /* Center buttons horizontally */
@@ -87,37 +86,49 @@
         cursor: pointer;
       }
 
-
-
-
-
-
+      .invalid-input {
+        border: 2px solid red; /* Example: Red border */
+        /* Add other styles for the invalid input as needed */
+      }
     </style>
-    <link rel="stylesheet" href="./gamescores.css">
-    <link rel="stylesheet" href="./teamtable.css">
-    <link rel="stylesheet" href="./results.css">
-    <link rel="stylesheet" href="./scoreroomsettings.css">
-    <link rel="stylesheet" href="./darkmode.css">
+    <link rel="stylesheet" href="./gamescores.css" />
+    <link rel="stylesheet" href="./teamtable.css" />
+    <link rel="stylesheet" href="./results.css" />
+    <link rel="stylesheet" href="./scoreroomsettings.css" />
+    <link rel="stylesheet" href="./save-icon.css" />
+    <link rel="stylesheet" href="./darkmode.css" />
+    <link rel="stylesheet" href="./loading.css" />
   </head>
   <body>
     <div id="mainContainer">
       <div id="tablesContainer"></div>
-      <div id="buttonContainer">
-        <button id="addTableButton" class="addTableButton">Add New Game</button>
-        <button id="manageTeamsButton" class="addTableButton">
-          Manage Teams
-        </button>
-        <button id="darkModeToggle" class="addTableButton">Dark Mode</button>
-        <button id="previewResults" class="addTableButton">
-          Preview Results
-        </button>
-        <button
-          id="scoreRoomSettingsButton"
-          class="addTableButton"
-          onclick="openScoreRoomSettingsModal()"
-        >
-          Manage Score Rooms
-        </button>
+      <div id="sidePanel">
+        <div id="buttonContainer">
+          <button id="addTableButton" class="addTableButton">
+            Add New Game
+          </button>
+          <button id="manageTeamsButton" class="addTableButton">
+            Manage Teams
+          </button>
+          <button id="darkModeToggle" class="addTableButton">Dark Mode</button>
+          <button id="previewResults" class="addTableButton">
+            Preview Results
+          </button>
+          <button
+            id="scoreRoomSettingsButton"
+            class="addTableButton"
+            onclick="openScoreRoomSettingsModal()"
+          >
+            Manage Score Rooms
+          </button>
+          <button id="printResultsButton" class="addTableButton" disabled>
+            Print Results
+          </button>
+        </div>
+        <div id="iconContainer">
+          <div id="saveIndicator"><div id="icon">💾</div></div>
+          <div id="onlineIndicator"><div id="icon">🌐</div></div>
+        </div>
       </div>
     </div>
 
@@ -132,8 +143,12 @@
     <div id="resultsModal" class="modal">
       <div class="modal-content">
         <span class="close-button" onclick="closeResultsModal()">&times;</span>
-        <h2>Preview Results</h2>
-        <div id="resultsTableContainer"></div>
+        <h2 style="text-align: center">Preview Results</h2>
+
+        <div id="resultsTablesContainer">
+          <div id="mainResultsTableContainer"></div>
+          <div id="extraResultsTableContainer"></div>
+        </div>
       </div>
     </div>
 
@@ -154,13 +169,19 @@
           </tr>
           <tr>
             <td>Scrim Name:</td>
-            <td><input type="text" id="scoreRoomScrimNameInput" list="scrimNameExamples">
+            <td>
+              <input
+                type="text"
+                id="scoreRoomScrimNameInput"
+                list="scrimNameExamples"
+              />
               <datalist id="scrimNameExamples">
-                  <option value="5s"></option>
-                  <option value="7s"></option>
-                  <option value="1030s"></option>
-                  <option value="12s"></option>
-              </datalist></td>
+                <option value="5s"></option>
+                <option value="7s"></option>
+                <option value="1030s"></option>
+                <option value="12s"></option>
+              </datalist>
+            </td>
           </tr>
           <tr>
             <td>Score Room Lobby / Group:</td>
@@ -179,18 +200,44 @@
         <h3>Score Room Selector</h3>
         <select id="scoreRoomSelect"></select>
 
-        <div >
-          <button id="createScoreRoomButton" class="addTableButton" style="margin-bottom: 10px;">
+        <div>
+          <button
+            id="createScoreRoomButton"
+            class="addTableButton"
+            style="margin-bottom: 10px"
+          >
             Create Score Room
           </button>
 
-          <button id="deleteScoreRoomButton" class="addTableButton" style="margin-bottom: 10px;">
+          <button
+            id="deleteScoreRoomButton"
+            class="addTableButton"
+            style="margin-bottom: 10px"
+          >
             Delete Score Room
           </button>
         </div>
 
-        <h3>Share Score Room</h3>
+        <h3>Share Score Room by ID</h3>
+        <div id="shareLinkContainer">
           <p id="shareScoreRoomLink"></p>
+          <button id="copyButton" class="copy-button">📋</button>
+        </div>
+
+        <h3>Load Score Room by ID</h3>
+        <div id="loadScoreRoomContainer">
+          <input type="text" id="loadScoreRoomInput" placeholder="Share ID" />
+          <button id="loadScoreRoomButton" class="addTableButton">
+            Get Room
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="errorModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeErrorModal()">&times;</span>
+        <h2>Errors Found</h2>
+        <ul id="errorList"></ul>
       </div>
     </div>
     <script src="./table.js"></script>
